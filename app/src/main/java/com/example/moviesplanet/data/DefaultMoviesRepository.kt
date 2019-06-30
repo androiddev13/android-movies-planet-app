@@ -9,7 +9,7 @@ class DefaultMoviesRepository constructor(private val api: MoviesServiceApi,
                                           private val appPreferences: AppPreferences) : MoviesRepository {
 
     override fun getMovies(page: Int): Single<List<MoviesResponse>> {
-        return api.listMovies(appPreferences.getCurrentSortingOption().sortOption)
+        return api.listMovies(appPreferences.getCurrentSortingOption().sortOption, page)
             .map { it.results?:throw Exception()}
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
