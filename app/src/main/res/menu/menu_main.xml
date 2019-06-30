@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/optionPopular"
+          android:title="@string/option_popular"
+          app:showAsAction="never"
+    />
+
+    <item android:id="@+id/optionRate"
+          android:title="@string/option_rate"
+          app:showAsAction="never"
+    />
+
+</menu>

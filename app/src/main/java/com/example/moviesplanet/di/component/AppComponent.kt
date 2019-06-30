@@ -2,6 +2,7 @@ package com.example.moviesplanet.di.component
 
 import android.app.Application
 import com.example.moviesplanet.AndroidApplication
+import com.example.moviesplanet.data.AppPreferences
 import com.example.moviesplanet.di.module.*
 import dagger.BindsInstance
 import dagger.Component
@@ -9,7 +10,7 @@ import dagger.android.AndroidInjectionModule
 import javax.inject.Singleton
 
 @Component(modules = [AndroidInjectionModule::class, BuildersModule::class, NetworkModule::class, DataModule::class,
-    ViewModelModule::class, ViewModelFactoryModule::class])
+    ViewModelModule::class, ViewModelFactoryModule::class, PreferencesModule::class])
 @Singleton
 interface AppComponent {
 

@@ -1,5 +1,6 @@
 package com.example.moviesplanet.di.module
 
+import com.example.moviesplanet.data.AppPreferences
 import com.example.moviesplanet.data.DefaultMoviesRepository
 import com.example.moviesplanet.data.MoviesRepository
 import com.example.moviesplanet.data.MoviesServiceApi
@@ -12,8 +13,8 @@ class DataModule {
 
     @Singleton
     @Provides
-    fun provideMoviesRepository(api: MoviesServiceApi): MoviesRepository {
-        return DefaultMoviesRepository(api)
+    fun provideMoviesRepository(api: MoviesServiceApi, appPreferences: AppPreferences): MoviesRepository {
+        return DefaultMoviesRepository(api, appPreferences)
     }
 
 }

@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">MoviesPlanet</string>
 
+    <!-- Main options menu. -->
+    <string name="option_popular">Sort by popularity</string>
+    <string name="option_rate">Sort by rating</string>
+
 </resources>
