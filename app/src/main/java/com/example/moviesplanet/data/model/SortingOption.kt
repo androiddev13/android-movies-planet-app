@@ -1,4 +1,4 @@
-package com.example.moviesplanet.data
+package com.example.moviesplanet.data.model
 
 enum class SortingOption(val sortOption: String) {
 

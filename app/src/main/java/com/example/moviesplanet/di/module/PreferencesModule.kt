@@ -3,7 +3,7 @@ package com.example.moviesplanet.di.module
 import android.app.Application
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import com.example.moviesplanet.data.AppPreferences
+import com.example.moviesplanet.data.storage.local.AppPreferences
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

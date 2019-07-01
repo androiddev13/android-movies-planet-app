@@ -1,6 +1,7 @@
-package com.example.moviesplanet.data
+package com.example.moviesplanet.data.storage.local
 
 import android.content.SharedPreferences
+import com.example.moviesplanet.data.model.SortingOption
 
 private const val KEY_CURRENT_SORTING_OPTION = "sorting_option"
 
@@ -12,7 +13,7 @@ class AppPreferences constructor(private val preferences: SharedPreferences) {
 
     fun getCurrentSortingOption(): SortingOption {
         val option = preferences.getString(KEY_CURRENT_SORTING_OPTION, SortingOption.POPULAR.name)
-        return option?.let { SortingOption.valueOf(it) } ?:SortingOption.POPULAR
+        return option?.let { SortingOption.valueOf(it) } ?: SortingOption.POPULAR
     }
 
 }

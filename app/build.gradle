@@ -21,12 +21,16 @@ android {
          */
         buildConfigField "String", "MOVIES_BASE_URL", "\"http://api.themoviedb.org/\""
         buildConfigField "String", "MOVIES_API_KEY", "\"4848c2da0fb83babba4b409beb4de953\""
+        buildConfigField "String", "MOVIES_IMAGE_BASE_URL", "\"http://image.tmdb.org/t/p/w185/\""
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+    androidExtensions {
+        experimental = true
     }
 }
 
@@ -43,6 +47,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-livedata:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
 
     // Testing.
     testImplementation 'junit:junit:4.12'
@@ -57,13 +62,19 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
 
     // Retrofit 2.
-    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.0'
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1'
 
     // Rx.
     implementation 'io.reactivex.rxjava2:rxjava:2.2.7'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+
+    // Picasso.
+    implementation'com.squareup.picasso:picasso:2.5.2'
+
+    // Material.
+    implementation "com.google.android.material:material:1.1.0-alpha07"
 }

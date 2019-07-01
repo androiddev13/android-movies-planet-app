@@ -1,4 +1,4 @@
-package com.example.moviesplanet.data
+package com.example.moviesplanet.data.storage
 
 import io.reactivex.Single
 import retrofit2.http.GET

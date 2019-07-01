@@ -1,8 +1,7 @@
 <resources>
     <string name="app_name">MoviesPlanet</string>
-
-    <!-- Main options menu. -->
     <string name="option_popular">Sort by popularity</string>
     <string name="option_rate">Sort by rating</string>
-
+    <string name="try_again">Try again</string>
+    <string name="message_error_generic">Something went wrong.</string>
 </resources>

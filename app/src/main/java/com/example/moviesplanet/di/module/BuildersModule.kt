@@ -1,6 +1,6 @@
 package com.example.moviesplanet.di.module
 
-import com.example.moviesplanet.MoviesActivity
+import com.example.moviesplanet.presentation.movies.MoviesActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

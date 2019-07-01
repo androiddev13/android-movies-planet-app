@@ -1,9 +1,10 @@
-package com.example.moviesplanet.data
+package com.example.moviesplanet.data.storage
 
+import com.example.moviesplanet.data.model.Movie
 import com.google.gson.annotations.SerializedName
 
-class MoviesResponse (
-    @SerializedName("poster_path") val posterPath: String,
+data class MoviesResponse (
+    @SerializedName("poster_path") val posterPath: String?,
     @SerializedName("adult") val adult: Boolean,
     @SerializedName("overview") val overview: String,
     @SerializedName("release_date") val releaseDate: String,
@@ -17,4 +18,8 @@ class MoviesResponse (
     @SerializedName("vote_count") val voteCount: Int,
     @SerializedName("video") val video: Boolean,
     @SerializedName("vote_average") val voteAverage: Double
-)
+) {
+
+    fun toMovie() = Movie(id, originalTitle, releaseDate, posterPath ?:"", voteAverage, overview)
+
+}
