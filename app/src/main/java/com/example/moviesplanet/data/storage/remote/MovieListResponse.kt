@@ -1,4 +1,4 @@
-package com.example.moviesplanet.data.storage
+package com.example.moviesplanet.data.storage.remote
 
 import com.google.gson.annotations.SerializedName
 

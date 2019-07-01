@@ -2,7 +2,7 @@ package com.example.moviesplanet.di.module
 
 import android.util.Log
 import com.example.moviesplanet.BuildConfig
-import com.example.moviesplanet.data.storage.MoviesServiceApi
+import com.example.moviesplanet.data.storage.remote.MoviesServiceApi
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor

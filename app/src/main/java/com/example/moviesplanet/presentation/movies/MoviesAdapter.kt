@@ -12,9 +12,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_movie.*
 
-class MoviesAdapter : RecyclerView.Adapter<BaseViewHolder>() {
-
-    private val VIEW_TYPE_MOVIE = 1
+class MoviesAdapter(private val onClick: (Movie) -> Unit) : RecyclerView.Adapter<BaseViewHolder>() {
 
     var list = listOf<Movie>()
 
@@ -31,10 +29,6 @@ class MoviesAdapter : RecyclerView.Adapter<BaseViewHolder>() {
         holder.bind(position)
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return VIEW_TYPE_MOVIE
-    }
-
     fun setData(items: List<Movie>) {
         list = items
         notifyDataSetChanged()
@@ -47,6 +41,7 @@ class MoviesAdapter : RecyclerView.Adapter<BaseViewHolder>() {
             Picasso.with(containerView.context)
                 .load(BuildConfig.MOVIES_IMAGE_BASE_URL + item.posterPath)
                 .into(posterImageView)
+            posterImageView.setOnClickListener { onClick(item) }
         }
 
     }

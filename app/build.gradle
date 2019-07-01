@@ -22,6 +22,7 @@ android {
         buildConfigField "String", "MOVIES_BASE_URL", "\"http://api.themoviedb.org/\""
         buildConfigField "String", "MOVIES_API_KEY", "\"4848c2da0fb83babba4b409beb4de953\""
         buildConfigField "String", "MOVIES_IMAGE_BASE_URL", "\"http://image.tmdb.org/t/p/w185/\""
+        buildConfigField "String", "MOVIES_VIDEO_BASE_URL", "\"http://youtube.com/watch?v=\""
     }
     buildTypes {
         release {
@@ -48,6 +49,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
 
     // Testing.
     testImplementation 'junit:junit:4.12'
@@ -69,7 +71,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1'
 
     // Rx.
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.7'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.10'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
     // Picasso.

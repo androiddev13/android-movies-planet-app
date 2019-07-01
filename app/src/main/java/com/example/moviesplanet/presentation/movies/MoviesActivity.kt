@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.moviesplanet.R
 import com.example.moviesplanet.presentation.generic.EndlessRecyclerOnScrollListener
 import com.example.moviesplanet.presentation.generic.LiveDataEventObserver
+import com.example.moviesplanet.presentation.moviedetails.MovieDetailsActivity
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
@@ -55,12 +56,16 @@ class MoviesActivity : AppCompatActivity() {
             val visibility = if (it) View.VISIBLE else View.GONE
             moviesProgressBar.visibility = visibility
         })
+
+        viewModel.navigateToDetailsLiveData.observe(this, LiveDataEventObserver {
+            startActivity(MovieDetailsActivity.getIntent(this, it))
+        })
     }
 
     private fun initView() {
         val manager = GridLayoutManager(this, 2)
         mainRecyclerView.layoutManager = manager
-        mainRecyclerView.adapter = MoviesAdapter()
+        mainRecyclerView.adapter = MoviesAdapter { movie -> viewModel.onMovieClick(movie) }
         mainRecyclerView.addOnScrollListener(endlessListener)
 
         tryAgainButton.setOnClickListener { viewModel.tryAgainClick() }

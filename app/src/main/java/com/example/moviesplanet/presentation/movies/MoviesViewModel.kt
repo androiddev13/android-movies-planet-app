@@ -20,6 +20,8 @@ class MoviesViewModel @Inject constructor(private val moviesRepository: MoviesRe
 
     val loadingIndicatorLiveData = MutableLiveData<Boolean>()
 
+    val navigateToDetailsLiveData = MutableLiveData<LiveDataEvent<Movie>>()
+
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     private val movies = mutableListOf<Movie>()
@@ -58,6 +60,10 @@ class MoviesViewModel @Inject constructor(private val moviesRepository: MoviesRe
         resetMovies()
 
         loadMovies()
+    }
+
+    fun onMovieClick(movie: Movie) {
+        navigateToDetailsLiveData.value = LiveDataEvent(movie)
     }
 
     private fun loadMovies() {
