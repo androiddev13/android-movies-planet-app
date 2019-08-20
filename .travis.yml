@@ -23,7 +23,6 @@ android:
     - sys-img-x86-android-26
     - sys-img-armeabi-v7a-android-17
 before_script:
-  - gem install bundler
   - yes | sdkmanager --update
   # Use this to automatically accept all licenses
   - yes | sdkmanager --licenses
