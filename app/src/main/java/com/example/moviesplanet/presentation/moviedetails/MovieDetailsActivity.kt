@@ -66,6 +66,7 @@ class MovieDetailsActivity : AppCompatActivity() {
             val visibility = if (it) View.VISIBLE else View.GONE
             badRequestContainer.visibility = visibility
         })
+
     }
 
     private fun initView() {
