@@ -10,7 +10,7 @@
     <androidx.core.widget.NestedScrollView
         android:id="@+id/containerDetail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         >
@@ -27,6 +27,7 @@
                 android:id="@+id/headerCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
                 app:cardPreventCornerOverlap="false"
                 >
 
@@ -106,7 +107,7 @@
                 android:id="@+id/infoCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
                 app:cardPreventCornerOverlap="false"
                 >
 
