@@ -12,8 +12,6 @@ interface MoviesRepository {
 
     fun getMovieDetails(movie: Movie): Single<MovieDetails>
 
-    //fun getMovieExternalInfo(movie: Movie): Single<List<MovieExternalInfo>>
-
     fun setCurrentSortingOption(sortingOption: SortingOption)
 
     fun addToFavorite(movie: Movie): Completable

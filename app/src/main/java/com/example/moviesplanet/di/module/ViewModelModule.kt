@@ -3,6 +3,7 @@ package com.example.moviesplanet.di.module
 import androidx.lifecycle.ViewModel
 import com.example.moviesplanet.presentation.movies.MoviesViewModel
 import com.example.moviesplanet.di.ViewModelKey
+import com.example.moviesplanet.presentation.favorites.MyFavoritesViewModel
 import com.example.moviesplanet.presentation.moviedetails.MovieDetailsViewModel
 import dagger.Binds
 import dagger.Module
@@ -20,5 +21,10 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(MovieDetailsViewModel::class)
     abstract fun bindMovieDetailsViewModel(movieDetailsViewModel: MovieDetailsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MyFavoritesViewModel::class)
+    abstract fun bindMyFavoritesVideModel(myFavoritesViewModel: MyFavoritesViewModel): ViewModel
 
 }

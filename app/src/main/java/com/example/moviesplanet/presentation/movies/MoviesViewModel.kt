@@ -22,6 +22,9 @@ class MoviesViewModel @Inject constructor(private val moviesRepository: MoviesRe
 
     val navigateToDetailsLiveData = MutableLiveData<LiveDataEvent<Movie>>()
 
+    // TODO make enum
+    val navigateToMyFavoritesLiveData = MutableLiveData<LiveDataEvent<Boolean>>()
+
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     private val movies = mutableListOf<Movie>()
@@ -42,24 +45,24 @@ class MoviesViewModel @Inject constructor(private val moviesRepository: MoviesRe
 
     fun sortByPopularClick() {
         moviesRepository.setCurrentSortingOption(SortingOption.POPULAR)
-
         // Reset page.
         currentPage = 1
         // Remove all previous data.
         resetMovies()
-
         loadMovies()
     }
 
     fun sortByTopRatedClick() {
         moviesRepository.setCurrentSortingOption(SortingOption.TOP_RATED)
-
         // Reset page.
         currentPage = 1
         // Remove all previous data.
         resetMovies()
-
         loadMovies()
+    }
+
+    fun onMyFavoritesClick() {
+        navigateToMyFavoritesLiveData.value = LiveDataEvent(true)
     }
 
     fun onMovieClick(movie: Movie) {
