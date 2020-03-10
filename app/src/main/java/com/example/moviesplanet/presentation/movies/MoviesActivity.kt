@@ -36,8 +36,6 @@ class MoviesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
         actionBarToggle = ActionBarDrawerToggle(this, drawerLayout, 0, 0)
         drawerLayout.addDrawerListener(actionBarToggle)
         actionBarToggle.syncState()
@@ -79,6 +77,8 @@ class MoviesActivity : AppCompatActivity() {
     }
 
     private fun initView() {
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         val manager = GridLayoutManager(this, 2)
         mainRecyclerView.layoutManager = manager
         mainRecyclerView.adapter = MoviesAdapter { movie -> viewModel.onMovieClick(movie) }

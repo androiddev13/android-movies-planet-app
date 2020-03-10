@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -71,14 +72,28 @@ class MovieDetailsActivity : AppCompatActivity() {
         })
 
         viewModel.favoriteLoadingIndicatorLiveData.observe(this, Observer {
-            val visibility = if (it) View.VISIBLE else View.GONE
-            favProgressBar.visibility = visibility
-            // TODO
-            favImageView.setImageResource(0)
+            if (it) {
+                favProgressBar.visibility = View.VISIBLE
+                favImageView.setImageResource(0)
+            } else {
+                favProgressBar.visibility = View.GONE
+            }
         })
     }
 
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when {
+            item?.itemId == android.R.id.home -> {
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     private fun initView() {
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         val manager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         infoRecyclerView.layoutManager = manager
         infoRecyclerView.isNestedScrollingEnabled = false
