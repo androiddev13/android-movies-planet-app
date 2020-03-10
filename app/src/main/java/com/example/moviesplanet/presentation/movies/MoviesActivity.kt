@@ -5,17 +5,21 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.moviesplanet.R
+import com.example.moviesplanet.presentation.favorites.MyFavoritesActivity
 import com.example.moviesplanet.presentation.generic.EndlessRecyclerOnScrollListener
 import com.example.moviesplanet.presentation.generic.LiveDataEventObserver
 import com.example.moviesplanet.presentation.moviedetails.MovieDetailsActivity
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main_content.*
 import javax.inject.Inject
 
 class MoviesActivity : AppCompatActivity() {
@@ -25,10 +29,16 @@ class MoviesActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MoviesViewModel
 
+    private lateinit var actionBarToggle: ActionBarDrawerToggle
+
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        actionBarToggle = ActionBarDrawerToggle(this, drawerLayout, 0, 0)
+        drawerLayout.addDrawerListener(actionBarToggle)
+        actionBarToggle.syncState()
 
         initView()
 
@@ -60,15 +70,29 @@ class MoviesActivity : AppCompatActivity() {
         viewModel.navigateToDetailsLiveData.observe(this, LiveDataEventObserver {
             startActivity(MovieDetailsActivity.getIntent(this, it))
         })
+
+        viewModel.navigateToMyFavoritesLiveData.observe(this, LiveDataEventObserver {
+            startActivity(MyFavoritesActivity.getIntent(this))
+        })
     }
 
     private fun initView() {
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         val manager = GridLayoutManager(this, 2)
         mainRecyclerView.layoutManager = manager
         mainRecyclerView.adapter = MoviesAdapter { movie -> viewModel.onMovieClick(movie) }
         mainRecyclerView.addOnScrollListener(endlessListener)
 
         tryAgainButton.setOnClickListener { viewModel.tryAgainClick() }
+
+        navigationView.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.menuFavorites -> viewModel.onMyFavoritesClick()
+            }
+            drawerLayout.closeDrawer(GravityCompat.START)
+            true
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -77,15 +101,16 @@ class MoviesActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when (item?.itemId) {
-            R.id.optionPopular -> {
+        return when {
+            item?.itemId == R.id.optionPopular -> {
                 viewModel.sortByPopularClick()
                 true
             }
-            R.id.optionRate -> {
+            item?.itemId == R.id.optionRate -> {
                 viewModel.sortByTopRatedClick()
                 true
             }
+            actionBarToggle.onOptionsItemSelected(item) -> true
             else -> super.onOptionsItemSelected(item)
         }
     }

@@ -6,8 +6,10 @@ import com.example.moviesplanet.di.component.DaggerAppComponent
 object AppInjector {
 
     fun init(application: AndroidApplication) {
-        DaggerAppComponent.builder().application(application)
-            .build().inject(application)
+        DaggerAppComponent.builder()
+            .application(application)
+            .build()
+            .inject(application)
     }
 
 }

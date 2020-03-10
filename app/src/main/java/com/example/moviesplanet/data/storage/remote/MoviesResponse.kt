@@ -17,9 +17,9 @@ data class MoviesResponse (
     @SerializedName("popularity") val popularity: Double,
     @SerializedName("vote_count") val voteCount: Int,
     @SerializedName("video") val video: Boolean,
-    @SerializedName("vote_average") val voteAverage: Double
-) {
+    @SerializedName("vote_average") val voteAverage: Double) {
 
-    fun toMovie() = Movie(id, originalTitle, releaseDate, posterPath ?:"", voteAverage, overview)
+    fun toMovie() =
+        Movie(id, originalTitle, releaseDate, posterPath ?:"", voteAverage, overview)
 
 }
