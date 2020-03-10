@@ -8,8 +8,9 @@ import dagger.Component
 import dagger.android.AndroidInjectionModule
 import javax.inject.Singleton
 
-@Component(modules = [AndroidInjectionModule::class, BuildersModule::class, NetworkModule::class, DataModule::class,
-    ViewModelModule::class, ViewModelFactoryModule::class, PreferencesModule::class])
+@Component(modules = [AndroidInjectionModule::class, BuildersModule::class, NetworkModule::class,
+    DataModule::class, ViewModelModule::class, ViewModelFactoryModule::class, PreferencesModule::class,
+    DatabaseModule::class])
 @Singleton
 interface AppComponent {
 
@@ -17,7 +18,6 @@ interface AppComponent {
     interface Builder {
         @BindsInstance
         fun application(application: Application): Builder
-
         fun build(): AppComponent
     }
 

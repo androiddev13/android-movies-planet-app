@@ -46,6 +46,9 @@ class MovieDetailsActivity : AppCompatActivity() {
             infoRateTextView.text = getString(R.string.rate_format, it.movie.voteAverage)
             descriptionTextView.text = it.movie.overview
 
+            val favImageViewSrc = if (it.isFavorite) R.drawable.ic_favorite_white else R.drawable.ic_favorite_border_white
+            favImageView.setImageResource(favImageViewSrc)
+
             val visibility = if (it.externalInfo.isEmpty()) View.GONE else View.VISIBLE
             (infoRecyclerView.adapter as MovieExternalInfoAdapter).setData(it.externalInfo)
             infoRecyclerView.visibility = visibility
@@ -66,6 +69,13 @@ class MovieDetailsActivity : AppCompatActivity() {
             val visibility = if (it) View.VISIBLE else View.GONE
             badRequestContainer.visibility = visibility
         })
+
+        viewModel.favoriteLoadingIndicatorLiveData.observe(this, Observer {
+            val visibility = if (it) View.VISIBLE else View.GONE
+            favProgressBar.visibility = visibility
+            // TODO
+            favImageView.setImageResource(0)
+        })
     }
 
     private fun initView() {
@@ -75,6 +85,8 @@ class MovieDetailsActivity : AppCompatActivity() {
         infoRecyclerView.adapter = MovieExternalInfoAdapter { movieExternalInfo -> viewModel.onExternalInfoClick(movieExternalInfo)  }
 
         tryAgainButton.setOnClickListener { viewModel.onTryAgainClick() }
+
+        favImageView.setOnClickListener { viewModel.toggleFavMovie() }
     }
 
     private fun getMovie() = intent.getParcelableExtra<Movie>(KEY_MOVIE)

@@ -1,18 +1,23 @@
 package com.example.moviesplanet.data
 
 import com.example.moviesplanet.data.model.Movie
-import com.example.moviesplanet.data.model.MovieExternalInfo
+import com.example.moviesplanet.data.model.MovieDetails
 import com.example.moviesplanet.data.model.SortingOption
-import io.reactivex.Flowable
-import io.reactivex.Observable
+import io.reactivex.Completable
 import io.reactivex.Single
 
 interface MoviesRepository {
 
     fun getMovies(page: Int): Single<List<Movie>>
 
-    fun getMovieExternalInfo(movie: Movie): Single<List<MovieExternalInfo>>
+    fun getMovieDetails(movie: Movie): Single<MovieDetails>
+
+    //fun getMovieExternalInfo(movie: Movie): Single<List<MovieExternalInfo>>
 
     fun setCurrentSortingOption(sortingOption: SortingOption)
+
+    fun addToFavorite(movie: Movie): Completable
+
+    fun removeFromFavorite(movie: Movie): Completable
 
 }
