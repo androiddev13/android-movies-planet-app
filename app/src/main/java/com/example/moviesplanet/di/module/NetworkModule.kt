@@ -1,7 +1,10 @@
 package com.example.moviesplanet.di.module
 
+import android.app.Application
+import android.content.Context
 import android.util.Log
 import com.example.moviesplanet.BuildConfig
+import com.example.moviesplanet.R
 import com.example.moviesplanet.data.storage.remote.MoviesServiceApi
 import dagger.Module
 import dagger.Provides
@@ -18,15 +21,16 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideHttpClient(): OkHttpClient {
+    fun provideHttpClient(application: Application): OkHttpClient {
+        val context = application.baseContext
         return if (BuildConfig.DEBUG) {
             OkHttpClient.Builder()
                 .addInterceptor(getLoggingInterceptor())
-                .addInterceptor(getQueryApiKeyInterceptor())
+                .addInterceptor(getQueryApiKeyInterceptor(context))
                 .build()
         } else {
             OkHttpClient.Builder()
-                .addInterceptor(getQueryApiKeyInterceptor())
+                .addInterceptor(getQueryApiKeyInterceptor(context))
                 .build()
         }
     }
@@ -35,7 +39,7 @@ class NetworkModule {
     @Provides
     fun provideMoviesServiceApi(client: OkHttpClient): MoviesServiceApi {
         return Retrofit.Builder()
-            .baseUrl(BuildConfig.MOVIES_BASE_URL)
+            .baseUrl(MoviesServiceApi.MOVIES_BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -57,12 +61,12 @@ class NetworkModule {
         /**
          * @return [Interceptor] which adds query with api key to each request.
          */
-        fun getQueryApiKeyInterceptor(): Interceptor {
+        fun getQueryApiKeyInterceptor(context: Context): Interceptor {
             return Interceptor {
                 val url = it.request()
                     .url()
                     .newBuilder()
-                    .addQueryParameter(KEY_API_KEY, BuildConfig.MOVIES_API_KEY)
+                    .addQueryParameter(KEY_API_KEY, context.getString(R.string.movie_db_api_key))
                     .build()
                 it.proceed(it.request().newBuilder().url(url).build())
             }

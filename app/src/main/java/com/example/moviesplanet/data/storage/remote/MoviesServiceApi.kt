@@ -16,4 +16,10 @@ interface MoviesServiceApi {
 
     @GET("3/movie/{id}/reviews")
     fun getMovieReviews(@Path("id") id: String): Single<ReviewListResponse>
+
+    companion object {
+        const val MOVIES_BASE_URL = "http://api.themoviedb.org/"
+        const val MOVIES_IMAGE_BASE_URL = "http://image.tmdb.org/t/p/w185/"
+        const val MOVIES_VIDEO_BASE_URL = "http://youtube.com/watch?v="
+    }
 }

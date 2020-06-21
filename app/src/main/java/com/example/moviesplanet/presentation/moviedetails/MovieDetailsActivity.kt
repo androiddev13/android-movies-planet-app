@@ -12,9 +12,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.moviesplanet.BuildConfig
 import com.example.moviesplanet.R
 import com.example.moviesplanet.data.model.Movie
+import com.example.moviesplanet.data.storage.remote.MoviesServiceApi
 import com.example.moviesplanet.presentation.generic.LiveDataEventObserver
 import com.squareup.picasso.Picasso
 import dagger.android.AndroidInjection
@@ -40,7 +40,7 @@ class MovieDetailsActivity : AppCompatActivity() {
 
         viewModel.movieDetailsLiveData.observe(this, Observer {
             Picasso.with(this)
-                .load(BuildConfig.MOVIES_IMAGE_BASE_URL + it.movie.posterPath)
+                .load(it.movie.posterPath)
                 .into(infoPosterImageView)
             title = it.movie.title
             infoYearTextView.text = it.movie.releaseDate
