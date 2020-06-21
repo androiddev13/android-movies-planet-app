@@ -18,4 +18,6 @@ interface MoviesRepository {
 
     fun removeFromFavorite(movie: Movie): Completable
 
+    fun getFavoriteMovies(): Single<List<Movie>>
+
 }

@@ -4,13 +4,14 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class Movie (val id: Int, val title: String, val releaseDate: String, val posterPath: String,
-                  val voteAverage: Double, val overview: String) : Parcelable {
+data class Movie (val id: Int,
+                  val title: String,
+                  val releaseDate: String,
+                  val posterPath: String,
+                  val voteAverage: Double,
+                  val overview: String) : Parcelable {
 
     companion object {
-
         fun getEmpty() = Movie(0, "", "", "", 0.0, "")
-
     }
-
 }

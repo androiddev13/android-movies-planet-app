@@ -51,13 +51,22 @@ class DefaultMoviesRepository constructor(private val api: MoviesServiceApi,
     }
 
     override fun addToFavorite(movie: Movie): Completable {
-        return movieDao.addMovie(MovieEntity(movie.id, movie.title))
+        return movieDao.addMovie(MovieEntity(movie.id, movie.title, movie.releaseDate, movie.posterPath, movie.voteAverage, movie.overview))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun removeFromFavorite(movie: Movie): Completable {
-        return movieDao.removeMovie(MovieEntity(movie.id, movie.title))
+        return movieDao.removeMovie(MovieEntity(movie.id, movie.title, movie.releaseDate, movie.posterPath, movie.voteAverage, movie.overview))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    override fun getFavoriteMovies(): Single<List<Movie>> {
+        return movieDao.getMovies()
+            .map { favorites ->
+                favorites.map { Movie(it.id, it.name, it.releaseDate, it.posterPath, it.voteAverage, it.overview) }
+            }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }

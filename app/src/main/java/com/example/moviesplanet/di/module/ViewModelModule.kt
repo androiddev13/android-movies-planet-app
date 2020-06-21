@@ -25,6 +25,6 @@ abstract class ViewModelModule {
     @Binds
     @IntoMap
     @ViewModelKey(MyFavoritesViewModel::class)
-    abstract fun bindMyFavoritesVideModel(myFavoritesViewModel: MyFavoritesViewModel): ViewModel
+    abstract fun bindMyFavoritesViewModel(myFavoritesViewModel: MyFavoritesViewModel): ViewModel
 
 }

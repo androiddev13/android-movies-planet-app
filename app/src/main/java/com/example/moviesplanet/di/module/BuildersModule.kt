@@ -1,5 +1,6 @@
 package com.example.moviesplanet.di.module
 
+import com.example.moviesplanet.presentation.favorites.MyFavoritesActivity
 import com.example.moviesplanet.presentation.moviedetails.MovieDetailsActivity
 import com.example.moviesplanet.presentation.movies.MoviesActivity
 import dagger.Module
@@ -13,5 +14,8 @@ abstract class BuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeMovieDetailsActivity(): MovieDetailsActivity
+
+    @ContributesAndroidInjector
+    abstract fun contributeMyFavoritesActivity(): MyFavoritesActivity
 
 }

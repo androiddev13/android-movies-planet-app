@@ -93,6 +93,7 @@ class MovieDetailsActivity : AppCompatActivity() {
 
     private fun initView() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        title = ""
 
         val manager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         infoRecyclerView.layoutManager = manager
