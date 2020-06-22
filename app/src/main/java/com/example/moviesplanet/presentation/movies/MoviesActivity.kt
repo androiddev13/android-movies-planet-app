@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.moviesplanet.R
 import com.example.moviesplanet.presentation.favorites.MyFavoritesActivity
-import com.example.moviesplanet.presentation.generic.EndlessRecyclerOnScrollListener
 import com.example.moviesplanet.presentation.generic.LiveDataEventObserver
 import com.example.moviesplanet.presentation.moviedetails.MovieDetailsActivity
 import com.google.android.material.snackbar.Snackbar
@@ -46,11 +45,10 @@ class MoviesActivity : AppCompatActivity() {
 
         viewModel.moviesLiveData.observe(this, Observer {
             (mainRecyclerView.adapter as MoviesAdapter).setData(it)
-            if (it.isEmpty()) {
-                endlessListener.reset()
-            }
         })
 
+
+        // TODO revowk/remove
         viewModel.firstLoadFailedLiveData.observe(this, Observer {
             val visibility = if (it) View.VISIBLE else View.GONE
             badRequestContainer.visibility = visibility
@@ -59,7 +57,6 @@ class MoviesActivity : AppCompatActivity() {
         viewModel.loadFailedLiveData.observe(this, LiveDataEventObserver {
             val message = it ?: getString(R.string.message_error_generic)
             Snackbar.make(mainContainer, message, Snackbar.LENGTH_SHORT).show()
-            endlessListener.loadFinished()
         })
 
         viewModel.loadingIndicatorLiveData.observe(this, Observer {
@@ -82,7 +79,6 @@ class MoviesActivity : AppCompatActivity() {
         val manager = GridLayoutManager(this, 2)
         mainRecyclerView.layoutManager = manager
         mainRecyclerView.adapter = MoviesAdapter { movie -> viewModel.onMovieClick(movie) }
-        mainRecyclerView.addOnScrollListener(endlessListener)
 
         tryAgainButton.setOnClickListener { viewModel.tryAgainClick() }
 
@@ -112,12 +108,6 @@ class MoviesActivity : AppCompatActivity() {
             }
             actionBarToggle.onOptionsItemSelected(item) -> true
             else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    private val endlessListener = object : EndlessRecyclerOnScrollListener() {
-        override fun onLoadMore() {
-            viewModel.loadMoreMovies()
         }
     }
 }

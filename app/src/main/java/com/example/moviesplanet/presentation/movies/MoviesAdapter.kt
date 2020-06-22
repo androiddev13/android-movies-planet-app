@@ -3,47 +3,52 @@ package com.example.moviesplanet.presentation.movies
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagedList
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesplanet.R
 import com.example.moviesplanet.data.model.Movie
-import com.example.moviesplanet.data.storage.remote.MoviesServiceApi
-import com.example.moviesplanet.presentation.generic.BaseViewHolder
 import com.squareup.picasso.Picasso
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_movie.*
 
-class MoviesAdapter(private val onClick: (Movie) -> Unit) : RecyclerView.Adapter<BaseViewHolder>() {
+class MoviesAdapter(private val onClick: (Movie) -> Unit) : PagedListAdapter<Movie, MoviesAdapter.MovieViewHolder>(moviesDiffCallback) {
 
-    var list = listOf<Movie>()
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val inflater =  LayoutInflater.from(parent.context);
         return MovieViewHolder(inflater.inflate(R.layout.item_movie, parent, false));
     }
 
-    override fun getItemCount(): Int {
-        return list.size
+    override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
+        holder.bind(getItem(position))
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        holder.bind(position)
+    fun setData(items: PagedList<Movie>) {
+        submitList(items)
     }
 
-    fun setData(items: List<Movie>) {
-        list = items
-        notifyDataSetChanged()
-    }
+    inner class MovieViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
-    inner class MovieViewHolder(override val containerView: View) : BaseViewHolder(containerView), LayoutContainer {
-
-        override fun bind(position: Int) {
-            val item = list[position]
-            Picasso.with(containerView.context)
-                .load(item.posterPath)
-                .into(posterImageView)
-            posterImageView.setOnClickListener { onClick(item) }
+        fun bind(item: Movie?) {
+            item?.let {
+                Picasso.with(containerView.context)
+                    .load(item.posterPath)
+                    .into(posterImageView)
+                posterImageView.setOnClickListener { onClick(item) }
+            }
         }
-
     }
 
+    companion object {
+        private val moviesDiffCallback = object : DiffUtil.ItemCallback<Movie>() {
+            override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
+                return oldItem == newItem
+            }
+        }
+    }
 }

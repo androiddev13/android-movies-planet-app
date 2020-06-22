@@ -1,18 +1,33 @@
 package com.example.moviesplanet.presentation.movies
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
+import com.example.moviesplanet.data.MoviesDataSourceFactory
 import com.example.moviesplanet.data.MoviesRepository
+import com.example.moviesplanet.data.PagingLoadingStatus
 import com.example.moviesplanet.data.model.Movie
 import com.example.moviesplanet.data.model.SortingOption
 import com.example.moviesplanet.presentation.generic.LiveDataEvent
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
-class MoviesViewModel @Inject constructor(private val moviesRepository: MoviesRepository) : ViewModel() {
+class MoviesViewModel @Inject constructor(private val moviesRepository: MoviesRepository,
+                                          movieDataSourceFactory: MoviesDataSourceFactory) : ViewModel() {
 
-    val moviesLiveData = MutableLiveData<List<Movie>>()
+    private val _moviesLiveData: LiveData<PagedList<Movie>>
+    val moviesLiveData: LiveData<PagedList<Movie>>
+        get() = _moviesLiveData
+
+    private val _moviesLoadingStatusLiveData = Transformations.switchMap(movieDataSourceFactory.repositoryDataSourceLiveData) {
+        it.loadingStatusLiveData
+    }
+    val moviesLoadingStatusLiveData: LiveData<PagingLoadingStatus>
+        get() = _moviesLoadingStatusLiveData
 
     val firstLoadFailedLiveData = MutableLiveData<Boolean>()
 
@@ -27,17 +42,21 @@ class MoviesViewModel @Inject constructor(private val moviesRepository: MoviesRe
 
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    private val movies = mutableListOf<Movie>()
+    //private val movies = mutableListOf<Movie>()
 
-    private var currentPage: Int = 1
+    //private var currentPage: Int = 1
 
     init {
-        loadMovies()
+        //loadMovies()
+        val config = PagedList.Config.Builder()
+            .setPageSize(PAGE_SIZE)
+            .build()
+        _moviesLiveData = LivePagedListBuilder<Long, Movie>(movieDataSourceFactory, config).build()
     }
 
-    fun loadMoreMovies() {
-        loadMovies()
-    }
+    //fun loadMoreMovies() {
+    //    loadMovies()
+    //}
 
     fun tryAgainClick() {
         loadMovies()
@@ -46,7 +65,7 @@ class MoviesViewModel @Inject constructor(private val moviesRepository: MoviesRe
     fun sortByPopularClick() {
         moviesRepository.setCurrentSortingOption(SortingOption.POPULAR)
         // Reset page.
-        currentPage = 1
+        //currentPage = 1
         // Remove all previous data.
         resetMovies()
         loadMovies()
@@ -55,7 +74,7 @@ class MoviesViewModel @Inject constructor(private val moviesRepository: MoviesRe
     fun sortByTopRatedClick() {
         moviesRepository.setCurrentSortingOption(SortingOption.TOP_RATED)
         // Reset page.
-        currentPage = 1
+        //currentPage = 1
         // Remove all previous data.
         resetMovies()
         loadMovies()
@@ -71,30 +90,30 @@ class MoviesViewModel @Inject constructor(private val moviesRepository: MoviesRe
 
     private fun loadMovies() {
         firstLoadFailedLiveData.value = false
-        if (currentPage == 1) {
-            loadingIndicatorLiveData.value = true
-        }
+        //if (currentPage == 1) {
+        //    loadingIndicatorLiveData.value = true
+        //}
 
-        val disposable = moviesRepository.getMovies(currentPage).subscribe({
-            onLoadSuccessful(it)
-        }, {
-             onLoadFailed(it)
-        })
-        compositeDisposable.add(disposable)
+        //val disposable = moviesRepository.getMovies(currentPage).subscribe({
+        //    onLoadSuccessful(it)
+        //}, {
+        //     onLoadFailed(it)
+        //})
+        //compositeDisposable.add(disposable)
     }
 
     private fun resetMovies() {
-        movies.clear()
-        moviesLiveData.value = movies
+        //movies.clear()
+        //moviesLiveData.value = movies
     }
 
     private fun onLoadSuccessful(list: List<Movie>) {
         // Update page num.
-        currentPage++
+        //currentPage++
         // If list is empty, we reach the end of list, so do nothing. Else, update UI.
         if (list.isNotEmpty()) {
-            movies.addAll(list)
-            moviesLiveData.value = movies
+            //movies.addAll(list)
+            //moviesLiveData.value = movies
         }
         // Hide loading indicator.
         loadingIndicatorLiveData.value = false
@@ -102,12 +121,12 @@ class MoviesViewModel @Inject constructor(private val moviesRepository: MoviesRe
 
     private fun onLoadFailed(throwable: Throwable) {
         Log.d(KEY_LOG, throwable.message)
-        if (currentPage == 1) {
-            // First load has been failed.
-            firstLoadFailedLiveData.value = true
-        } else {
-            loadFailedLiveData.value = LiveDataEvent(throwable.message)
-        }
+        //if (currentPage == 1) {
+        //    // First load has been failed.
+        //    firstLoadFailedLiveData.value = true
+        //} else {
+        //    loadFailedLiveData.value = LiveDataEvent(throwable.message)
+        //}
         // Hide loading indicator.
         loadingIndicatorLiveData.value = false
     }
@@ -118,7 +137,7 @@ class MoviesViewModel @Inject constructor(private val moviesRepository: MoviesRe
     }
 
     companion object {
-        const val KEY_LOG = "Movies_view_model"
+        private const val KEY_LOG = "Movies_view_model"
+        private const val PAGE_SIZE = 20
     }
-
 }

@@ -18,7 +18,7 @@ class DefaultMoviesRepository constructor(private val api: MoviesServiceApi,
                                           private val appPreferences: AppPreferences,
                                           private val movieDao: MovieDao) : MoviesRepository {
 
-    override fun getMovies(page: Int): Single<List<Movie>> {
+    override fun getMovies(page: Long): Single<List<Movie>> {
         return api.getMovies(appPreferences.getCurrentSortingOption().sortOption, page)
             .map { response ->
                 response.results
