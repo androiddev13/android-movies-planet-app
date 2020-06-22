@@ -29,16 +29,15 @@ class MoviesViewModel @Inject constructor(private val moviesRepository: MoviesRe
     val moviesLoadingStatusLiveData: LiveData<PagingLoadingStatus>
         get() = _moviesLoadingStatusLiveData
 
+    private val _moviesNavigationLiveData = MutableLiveData<LiveDataEvent<MoviesNavigation>>()
+    val moviesNavigationLiveData: LiveData<LiveDataEvent<MoviesNavigation>>
+        get() = _moviesNavigationLiveData
+
     val firstLoadFailedLiveData = MutableLiveData<Boolean>()
 
     val loadFailedLiveData = MutableLiveData<LiveDataEvent<String?>>()
 
     val loadingIndicatorLiveData = MutableLiveData<Boolean>()
-
-    val navigateToDetailsLiveData = MutableLiveData<LiveDataEvent<Movie>>()
-
-    // TODO make enum
-    val navigateToMyFavoritesLiveData = MutableLiveData<LiveDataEvent<Boolean>>()
 
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
@@ -81,11 +80,11 @@ class MoviesViewModel @Inject constructor(private val moviesRepository: MoviesRe
     }
 
     fun onMyFavoritesClick() {
-        navigateToMyFavoritesLiveData.value = LiveDataEvent(true)
+        _moviesNavigationLiveData.value = LiveDataEvent(MoviesNavigation.toMyFavorites())
     }
 
     fun onMovieClick(movie: Movie) {
-        navigateToDetailsLiveData.value = LiveDataEvent(movie)
+        _moviesNavigationLiveData.value = LiveDataEvent(MoviesNavigation.toMovieDetails(movie))
     }
 
     private fun loadMovies() {

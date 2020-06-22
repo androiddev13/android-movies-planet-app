@@ -1,7 +1,5 @@
 package com.example.moviesplanet.data
 
-import java.lang.Exception
-
 enum class Status {
     FIRST_LOADING,
     FIRST_LOADING_FAILED,

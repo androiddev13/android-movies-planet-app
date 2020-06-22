@@ -49,27 +49,26 @@ class MoviesActivity : AppCompatActivity() {
 
 
         // TODO revowk/remove
-        viewModel.firstLoadFailedLiveData.observe(this, Observer {
-            val visibility = if (it) View.VISIBLE else View.GONE
-            badRequestContainer.visibility = visibility
-        })
+        //viewModel.firstLoadFailedLiveData.observe(this, Observer {
+        //    val visibility = if (it) View.VISIBLE else View.GONE
+        //    badRequestContainer.visibility = visibility
+        //})
+//
+        //viewModel.loadFailedLiveData.observe(this, LiveDataEventObserver {
+        //    val message = it ?: getString(R.string.message_error_generic)
+        //    Snackbar.make(mainContainer, message, Snackbar.LENGTH_SHORT).show()
+        //})
+//
+        //viewModel.loadingIndicatorLiveData.observe(this, Observer {
+        //    val visibility = if (it) View.VISIBLE else View.GONE
+        //    moviesProgressBar.visibility = visibility
+        //})
 
-        viewModel.loadFailedLiveData.observe(this, LiveDataEventObserver {
-            val message = it ?: getString(R.string.message_error_generic)
-            Snackbar.make(mainContainer, message, Snackbar.LENGTH_SHORT).show()
-        })
-
-        viewModel.loadingIndicatorLiveData.observe(this, Observer {
-            val visibility = if (it) View.VISIBLE else View.GONE
-            moviesProgressBar.visibility = visibility
-        })
-
-        viewModel.navigateToDetailsLiveData.observe(this, LiveDataEventObserver {
-            startActivity(MovieDetailsActivity.getIntent(this, it))
-        })
-
-        viewModel.navigateToMyFavoritesLiveData.observe(this, LiveDataEventObserver {
-            startActivity(MyFavoritesActivity.getIntent(this))
+        viewModel.moviesNavigationLiveData.observe(this, LiveDataEventObserver {
+            when (it.navigation) {
+                Navigation.MOVIE_DETAILS -> startActivity(MovieDetailsActivity.getIntent(this, it.movie))
+                Navigation.MY_FAVORITES -> startActivity(MyFavoritesActivity.getIntent(this))
+            }
         })
     }
 
