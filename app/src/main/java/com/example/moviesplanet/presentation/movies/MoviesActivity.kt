@@ -19,6 +19,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main_content.*
+import kotlinx.android.synthetic.main.view_error_message.view.*
 import javax.inject.Inject
 
 class MoviesActivity : AppCompatActivity() {
@@ -79,7 +80,7 @@ class MoviesActivity : AppCompatActivity() {
         mainRecyclerView.layoutManager = manager
         mainRecyclerView.adapter = MoviesAdapter { movie -> viewModel.onMovieClick(movie) }
 
-        tryAgainButton.setOnClickListener { viewModel.tryAgainClick() }
+        errorMessageView.tryAgainButton.setOnClickListener { viewModel.tryAgainClick() }
 
         navigationView.setNavigationItemSelectedListener {
             when (it.itemId) {

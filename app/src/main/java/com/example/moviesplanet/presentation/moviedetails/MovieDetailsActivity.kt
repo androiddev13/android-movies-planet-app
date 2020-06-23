@@ -14,11 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesplanet.R
 import com.example.moviesplanet.data.model.Movie
-import com.example.moviesplanet.data.storage.remote.MoviesServiceApi
 import com.example.moviesplanet.presentation.generic.LiveDataEventObserver
 import com.squareup.picasso.Picasso
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_movie_details.*
+import kotlinx.android.synthetic.main.view_error_message.view.*
 import javax.inject.Inject
 
 class MovieDetailsActivity : AppCompatActivity() {
@@ -68,7 +68,7 @@ class MovieDetailsActivity : AppCompatActivity() {
 
         viewModel.loadFailedLiveData.observe(this, Observer {
             val visibility = if (it) View.VISIBLE else View.GONE
-            badRequestContainer.visibility = visibility
+            errorMessageView.visibility = visibility
         })
 
         viewModel.favoriteLoadingIndicatorLiveData.observe(this, Observer {
@@ -100,7 +100,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         infoRecyclerView.isNestedScrollingEnabled = false
         infoRecyclerView.adapter = MovieExternalInfoAdapter { movieExternalInfo -> viewModel.onExternalInfoClick(movieExternalInfo)  }
 
-        tryAgainButton.setOnClickListener { viewModel.onTryAgainClick() }
+        errorMessageView.tryAgainButton.setOnClickListener { viewModel.onTryAgainClick() }
 
         favImageView.setOnClickListener { viewModel.toggleFavMovie() }
     }
