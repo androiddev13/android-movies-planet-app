@@ -31,7 +31,7 @@ class DefaultMoviesRepository constructor(private val api: MoviesServiceApi,
 
     override fun getMovieDetails(movie: Movie): Single<MovieDetails> {
         return getMovieExternalInfo(movie)
-            .zipWith(movieDao.getMovies(), BiFunction<List<MovieExternalInfo>, List<MovieEntity>, MovieDetails> { t1, t2 ->
+            .zipWith(movieDao.getMovies().first(listOf()), BiFunction<List<MovieExternalInfo>, List<MovieEntity>, MovieDetails> { t1, t2 ->
                 MovieDetails(movie, isFavoriteMovie(t2, movie.id), t1)
             })
             .subscribeOn(Schedulers.io())
@@ -62,7 +62,7 @@ class DefaultMoviesRepository constructor(private val api: MoviesServiceApi,
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun getFavoriteMovies(): Single<List<Movie>> {
+    override fun getFavoriteMovies(): Observable<List<Movie>> {
         return movieDao.getMovies()
             .map { favorites ->
                 favorites.map { Movie(it.id, it.name, it.releaseDate, it.posterPath, it.voteAverage, it.overview) }

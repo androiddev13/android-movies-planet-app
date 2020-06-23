@@ -4,6 +4,7 @@ import com.example.moviesplanet.data.model.Movie
 import com.example.moviesplanet.data.model.MovieDetails
 import com.example.moviesplanet.data.model.SortingOption
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 
 interface MoviesRepository {
@@ -18,6 +19,6 @@ interface MoviesRepository {
 
     fun removeFromFavorite(movie: Movie): Completable
 
-    fun getFavoriteMovies(): Single<List<Movie>>
+    fun getFavoriteMovies(): Observable<List<Movie>>
 
 }

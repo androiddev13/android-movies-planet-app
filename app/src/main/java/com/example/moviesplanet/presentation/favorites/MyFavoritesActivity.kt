@@ -11,6 +11,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesplanet.R
+import com.example.moviesplanet.presentation.generic.LiveDataEventObserver
+import com.example.moviesplanet.presentation.moviedetails.MovieDetailsActivity
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_movie_details.*
 import kotlinx.android.synthetic.main.activity_my_favorites.*
@@ -39,6 +41,10 @@ class MyFavoritesActivity : AppCompatActivity() {
                 // TODO
             }
         })
+
+        viewModel.favoritesNavigationLiveData.observe(this, LiveDataEventObserver {
+            startActivity(MovieDetailsActivity.getIntent(this, it.movie))
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -58,7 +64,9 @@ class MyFavoritesActivity : AppCompatActivity() {
         val manager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         moviesRecyclerView.apply {
             layoutManager = manager
-            adapter = MyFavoritesAdapter()
+            adapter = MyFavoritesAdapter {
+                viewModel.onMovieClick(it)
+            }
         }
     }
 
