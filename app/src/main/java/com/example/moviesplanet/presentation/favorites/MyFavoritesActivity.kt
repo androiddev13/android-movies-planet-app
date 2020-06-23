@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -35,11 +36,9 @@ class MyFavoritesActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MyFavoritesViewModel::class.java)
 
         viewModel.favoriteMoviesLiveData.observe(this, Observer {
-            if (it.isNotEmpty()) {
-                (moviesRecyclerView.adapter as MyFavoritesAdapter).setData(it)
-            } else {
-                // TODO
-            }
+            (moviesRecyclerView.adapter as MyFavoritesAdapter).setData(it)
+            val noFavoritesViewVisibility = if (it.isEmpty()) View.VISIBLE else View.GONE
+            noFavoritesTextView.visibility = noFavoritesViewVisibility
         })
 
         viewModel.favoritesNavigationLiveData.observe(this, LiveDataEventObserver {

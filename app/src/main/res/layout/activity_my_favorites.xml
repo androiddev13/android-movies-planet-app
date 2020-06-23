@@ -16,4 +16,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         />
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/noFavoritesTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/my_favorites_no_movies"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/ContentStyle"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
