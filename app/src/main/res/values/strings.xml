@@ -1,5 +1,5 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name">MoviesPlanet</string>
+    <string name="app_name">Movies Planet</string>
     <string name="movie_db_api_key">4848c2da0fb83babba4b409beb4de953</string>
     <string name="option_popular">Sort by popularity</string>
     <string name="option_rate">Sort by rating</string>
