@@ -6,12 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesplanet.R
 import com.example.moviesplanet.data.model.Movie
-import com.example.moviesplanet.data.storage.remote.MoviesServiceApi
-import com.example.moviesplanet.presentation.generic.BaseViewHolder
 import com.squareup.picasso.Picasso
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_favorite_movie.*
-import kotlinx.android.synthetic.main.item_movie.*
 
 class MyFavoritesAdapter() : RecyclerView.Adapter<MyFavoritesAdapter.FavoriteViewHolder>() {
 
@@ -27,7 +24,7 @@ class MyFavoritesAdapter() : RecyclerView.Adapter<MyFavoritesAdapter.FavoriteVie
     }
 
     override fun onBindViewHolder(holder: FavoriteViewHolder, position: Int) {
-        holder.bind(position)
+        holder.bind(list[position])
     }
 
     fun setData(items: List<Movie>) {
@@ -35,10 +32,9 @@ class MyFavoritesAdapter() : RecyclerView.Adapter<MyFavoritesAdapter.FavoriteVie
         notifyDataSetChanged()
     }
 
-    inner class FavoriteViewHolder(override val containerView: View) : BaseViewHolder(containerView), LayoutContainer {
+    inner class FavoriteViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
-        override fun bind(position: Int) {
-            val item = list[position]
+        fun bind(item: Movie) {
             Picasso.with(containerView.context)
                 .load(item.posterPath)
                 .into(movieImageView)

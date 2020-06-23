@@ -6,15 +6,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesplanet.R
 import com.example.moviesplanet.data.model.MovieExternalInfo
-import com.example.moviesplanet.presentation.generic.BaseViewHolder
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_movie_external_info.*
 
-class MovieExternalInfoAdapter(private val onClick: (MovieExternalInfo) -> Unit) : RecyclerView.Adapter<BaseViewHolder>() {
+class MovieExternalInfoAdapter(private val onClick: (MovieExternalInfo) -> Unit) : RecyclerView.Adapter<MovieExternalInfoAdapter.ExternalInfoViewHolder>() {
 
     var list = listOf<MovieExternalInfo>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExternalInfoViewHolder {
         val inflater =  LayoutInflater.from(parent.context);
         return ExternalInfoViewHolder(inflater.inflate(R.layout.item_movie_external_info, parent, false))
     }
@@ -23,8 +22,8 @@ class MovieExternalInfoAdapter(private val onClick: (MovieExternalInfo) -> Unit)
         return list.size
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        holder.bind(position)
+    override fun onBindViewHolder(holder: ExternalInfoViewHolder, position: Int) {
+        holder.bind(list[position])
     }
 
     fun setData(items: List<MovieExternalInfo>) {
@@ -32,13 +31,12 @@ class MovieExternalInfoAdapter(private val onClick: (MovieExternalInfo) -> Unit)
         notifyDataSetChanged()
     }
 
-    inner class ExternalInfoViewHolder(override val containerView: View) : BaseViewHolder(containerView), LayoutContainer {
+    inner class ExternalInfoViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
-        override fun bind(position: Int) {
-            val item = list[position]
+       fun bind(item: MovieExternalInfo) {
             infoTextView.text = item.name
             showImageButton.setOnClickListener { onClick(item) }
             externalInfoContainer.setOnClickListener { onClick(item) }
-        }
+       }
     }
 }
