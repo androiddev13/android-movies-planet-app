@@ -10,12 +10,12 @@ import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.moviesplanet.R
+import com.example.moviesplanet.data.Status
 import com.example.moviesplanet.presentation.favorites.MyFavoritesActivity
 import com.example.moviesplanet.presentation.generic.LiveDataEventObserver
 import com.example.moviesplanet.presentation.moviedetails.MovieDetailsActivity
-import com.google.android.material.snackbar.Snackbar
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main_content.*
@@ -48,22 +48,22 @@ class MoviesActivity : AppCompatActivity() {
             (mainRecyclerView.adapter as MoviesAdapter).setData(it)
         })
 
-
-        // TODO revowk/remove
-        //viewModel.firstLoadFailedLiveData.observe(this, Observer {
-        //    val visibility = if (it) View.VISIBLE else View.GONE
-        //    badRequestContainer.visibility = visibility
-        //})
-//
-        //viewModel.loadFailedLiveData.observe(this, LiveDataEventObserver {
-        //    val message = it ?: getString(R.string.message_error_generic)
-        //    Snackbar.make(mainContainer, message, Snackbar.LENGTH_SHORT).show()
-        //})
-//
-        //viewModel.loadingIndicatorLiveData.observe(this, Observer {
-        //    val visibility = if (it) View.VISIBLE else View.GONE
-        //    moviesProgressBar.visibility = visibility
-        //})
+        viewModel.moviesLoadingStatusLiveData.observe(this, Observer {
+            when(it.status) {
+                Status.FIRST_LOADING -> {
+                    moviesProgressBar.visibility = View.VISIBLE
+                    errorMessageView.visibility = View.GONE
+                }
+                Status.FIRST_LOADING_FAILED -> {
+                    moviesProgressBar.visibility = View.GONE
+                    errorMessageView.visibility = View.VISIBLE
+                }
+                Status.FIRST_LOADING_SUCCESS -> {
+                    moviesProgressBar.visibility = View.GONE
+                }
+                else -> (mainRecyclerView.adapter as MoviesAdapter).setLoadingStatus(it)
+            }
+        })
 
         viewModel.moviesNavigationLiveData.observe(this, LiveDataEventObserver {
             when (it.navigation) {
@@ -76,9 +76,9 @@ class MoviesActivity : AppCompatActivity() {
     private fun initView() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val manager = GridLayoutManager(this, 2)
+        val manager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         mainRecyclerView.layoutManager = manager
-        mainRecyclerView.adapter = MoviesAdapter { movie -> viewModel.onMovieClick(movie) }
+        mainRecyclerView.adapter = MoviesAdapter({ movie -> viewModel.onMovieClick(movie) }, { viewModel.tryAgainClick() })
 
         errorMessageView.tryAgainButton.setOnClickListener { viewModel.tryAgainClick() }
 

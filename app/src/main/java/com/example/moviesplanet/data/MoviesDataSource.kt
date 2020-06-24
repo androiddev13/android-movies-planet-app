@@ -5,8 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.example.moviesplanet.data.model.Movie
 import io.reactivex.Completable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Action
+import io.reactivex.schedulers.Schedulers
 
 class MoviesDataSource(private val moviesRepository: MoviesRepository,
                        private val compositeDisposable: CompositeDisposable) : PageKeyedDataSource<Long, Movie>() {
@@ -16,6 +18,15 @@ class MoviesDataSource(private val moviesRepository: MoviesRepository,
         get() = _loadingStatusLiveData
 
     private var retryCompletable: Completable? = null
+
+    fun retry() {
+        retryCompletable?.let {
+            val disposable = it.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()
+            compositeDisposable.add(disposable)
+        }
+    }
 
     override fun loadInitial(params: LoadInitialParams<Long>, callback: LoadInitialCallback<Long, Movie>) {
         _loadingStatusLiveData.postValue(PagingLoadingStatus.FIRST_LOADING)
