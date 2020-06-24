@@ -106,6 +106,10 @@ class MoviesActivity : AppCompatActivity() {
                 viewModel.sortByTopRatedClick()
                 true
             }
+            item?.itemId == R.id.optionUpcoming -> {
+                viewModel.sortByUpcomingClick()
+                true
+            }
             actionBarToggle.onOptionsItemSelected(item) -> true
             else -> super.onOptionsItemSelected(item)
         }

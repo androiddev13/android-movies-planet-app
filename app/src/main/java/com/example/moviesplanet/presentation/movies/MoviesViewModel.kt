@@ -52,6 +52,11 @@ class MoviesViewModel @Inject constructor(private val moviesRepository: MoviesRe
         movieDataSourceFactory.repositoryDataSourceLiveData.value?.invalidate()
     }
 
+    fun sortByUpcomingClick() {
+        moviesRepository.setCurrentSortingOption(SortingOption.UPCOMING)
+        movieDataSourceFactory.repositoryDataSourceLiveData.value?.invalidate()
+    }
+
     fun onMyFavoritesClick() {
         _moviesNavigationLiveData.value = LiveDataEvent(MoviesNavigation.toMyFavorites())
     }

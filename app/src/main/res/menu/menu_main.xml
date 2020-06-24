@@ -2,14 +2,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/optionPopular"
-          android:title="@string/option_popular"
-          app:showAsAction="never"
-    />
+    <item
+        android:id="@+id/optionPopular"
+        android:title="@string/option_popular"
+        app:showAsAction="never"
+        />
 
-    <item android:id="@+id/optionRate"
-          android:title="@string/option_rate"
-          app:showAsAction="never"
-    />
+    <item
+        android:id="@+id/optionRate"
+        android:title="@string/option_rate"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/optionUpcoming"
+        android:title="@string/option_upcoming"
+        app:showAsAction="never"
+        />
 
 </menu>

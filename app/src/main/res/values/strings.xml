@@ -3,6 +3,7 @@
     <string name="movie_db_api_key">4848c2da0fb83babba4b409beb4de953</string>
     <string name="option_popular">Sort by popularity</string>
     <string name="option_rate">Sort by rating</string>
+    <string name="option_upcoming">Sort by upcoming</string>
     <string name="try_again">Try again</string>
     <string name="message_error_generic">Something went wrong.</string>
     <string name="rate_format" translatable="false"><xliff:g id="rate">%1.1f</xliff:g>\u002F\u0031\u0030</string>
