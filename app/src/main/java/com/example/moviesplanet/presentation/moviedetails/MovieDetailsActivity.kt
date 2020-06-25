@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesplanet.R
 import com.example.moviesplanet.data.model.Movie
+import com.example.moviesplanet.data.model.Status
+import com.example.moviesplanet.presentation.ExternalWebPageNavigation
 import com.example.moviesplanet.presentation.generic.LiveDataEventObserver
 import com.squareup.picasso.Picasso
 import dagger.android.AndroidInjection
@@ -58,18 +60,30 @@ class MovieDetailsActivity : AppCompatActivity() {
             containerDetail.visibility = View.VISIBLE
         })
 
-        viewModel.navigateToInfoViewLiveData.observe(this, LiveDataEventObserver {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it)))
+        viewModel.navigationLiveData.observe(this, LiveDataEventObserver {
+            when (it) {
+                is ExternalWebPageNavigation -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it.url)))
+            }
         })
 
-        viewModel.loadingIndicatorLiveData.observe(this, Observer {
-            val visibility = if (it) View.VISIBLE else View.GONE
-            progressBar.visibility = visibility
-        })
-
-        viewModel.loadFailedLiveData.observe(this, Observer {
-            val visibility = if (it) View.VISIBLE else View.GONE
-            errorMessageView.visibility = visibility
+        viewModel.loadingStatusLiveData.observe(this, Observer {
+            when (it.status) {
+                Status.LOADING -> {
+                    progressBar.visibility = View.VISIBLE
+                    errorMessageView.visibility = View.GONE
+                }
+                Status.LOADING_SUCCESS -> {
+                    progressBar.visibility = View.GONE
+                }
+                Status.LOADING_FAILED -> {
+                    progressBar.visibility = View.GONE
+                    errorMessageView.apply {
+                        errorMessageTextView.text = it.message
+                        visibility = View.VISIBLE
+                    }
+                }
+                else -> {}
+            }
         })
 
         viewModel.favoriteLoadingIndicatorLiveData.observe(this, Observer {

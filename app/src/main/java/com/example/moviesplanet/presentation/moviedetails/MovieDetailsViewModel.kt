@@ -1,27 +1,37 @@
 package com.example.moviesplanet.presentation.moviedetails
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.moviesplanet.data.MoviesRepository
+import com.example.moviesplanet.data.model.LoadingStatus
 import com.example.moviesplanet.data.model.Movie
 import com.example.moviesplanet.data.model.MovieDetails
 import com.example.moviesplanet.data.model.MovieExternalInfo
+import com.example.moviesplanet.presentation.ExternalWebPageNavigation
+import com.example.moviesplanet.presentation.Navigation
 import com.example.moviesplanet.presentation.generic.LiveDataEvent
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class MovieDetailsViewModel @Inject constructor(private val moviesRepository: MoviesRepository) : ViewModel() {
 
-    val movieDetailsLiveData = MutableLiveData<MovieDetails>()
+    private val _movieDetailsLiveData = MutableLiveData<MovieDetails>()
+    val movieDetailsLiveData: LiveData<MovieDetails>
+        get() = _movieDetailsLiveData
 
-    val navigateToInfoViewLiveData = MutableLiveData<LiveDataEvent<String>>()
+    private val _navigationLiveData = MutableLiveData<LiveDataEvent<Navigation>>()
+    val navigationLiveData: LiveData<LiveDataEvent<Navigation>>
+        get() = _navigationLiveData
 
-    val loadingIndicatorLiveData = MutableLiveData<Boolean>()
+    private val _loadingStatusLiveData = MutableLiveData<LoadingStatus>()
+    val loadingStatusLiveData: LiveData<LoadingStatus>
+        get() = _loadingStatusLiveData
 
-    val loadFailedLiveData = MutableLiveData<Boolean>()
-
-    val favoriteLoadingIndicatorLiveData = MutableLiveData<Boolean>()
+    private val _favoriteLoadingIndicatorLiveData = MutableLiveData<Boolean>()
+    val favoriteLoadingIndicatorLiveData: LiveData<Boolean>
+        get() = _favoriteLoadingIndicatorLiveData
 
     private var movie: Movie = Movie.getEmpty()
 
@@ -40,11 +50,11 @@ class MovieDetailsViewModel @Inject constructor(private val moviesRepository: Mo
     }
 
     fun onExternalInfoClick(externalInfo: MovieExternalInfo) {
-        navigateToInfoViewLiveData.value = LiveDataEvent(externalInfo.url)
+        _navigationLiveData.value = LiveDataEvent(ExternalWebPageNavigation(externalInfo.url))
     }
 
     fun toggleFavMovie() {
-        if (movieDetailsLiveData.value?.isFavorite == true) {
+        if (_movieDetailsLiveData.value?.isFavorite == true) {
             removeMovieFromFavorites()
         } else {
             addMovieToFavorites()
@@ -53,51 +63,49 @@ class MovieDetailsViewModel @Inject constructor(private val moviesRepository: Mo
 
     private fun removeMovieFromFavorites()  {
         val disposable = moviesRepository.removeFromFavorite(movie)
-            .doOnSubscribe { favoriteLoadingIndicatorLiveData.value = true }
+            .doOnSubscribe { _favoriteLoadingIndicatorLiveData.value = true }
             .subscribe({
-                favoriteLoadingIndicatorLiveData.value = false
-                movieDetailsLiveData.value = movieDetailsLiveData.value?.copy(isFavorite = false)
+                _favoriteLoadingIndicatorLiveData.value = false
+                _movieDetailsLiveData.value = _movieDetailsLiveData.value?.copy(isFavorite = false)
             }, {
                 Log.d(KEY_LOG, it.message)
-                favoriteLoadingIndicatorLiveData.value = false
+                _favoriteLoadingIndicatorLiveData.value = false
             })
         compositeDisposable.add(disposable)
     }
 
     private fun addMovieToFavorites() {
-        favoriteLoadingIndicatorLiveData.value = true
         val disposable = moviesRepository.addToFavorite(movie)
-            .doOnSubscribe { favoriteLoadingIndicatorLiveData.value = true }
+            .doOnSubscribe { _favoriteLoadingIndicatorLiveData.value = true }
             .subscribe({
-                favoriteLoadingIndicatorLiveData.value = false
-                movieDetailsLiveData.value = movieDetailsLiveData.value?.copy(isFavorite = true)
+                _favoriteLoadingIndicatorLiveData.value = false
+                _movieDetailsLiveData.value = _movieDetailsLiveData.value?.copy(isFavorite = true)
             }, {
                 Log.d(KEY_LOG, it.message)
-                favoriteLoadingIndicatorLiveData.value = false
+                _favoriteLoadingIndicatorLiveData.value = false
             })
         compositeDisposable.add(disposable)
     }
 
     private fun loadDetails() {
-        loadingIndicatorLiveData.value = true
-        loadFailedLiveData.value = false
-        val disposable = moviesRepository.getMovieDetails(movie).subscribe({
-            onDetailsLoadSuccessful(it)
-        }, {
-            onDetailsLoadFailed(it)
-        })
+        val disposable = moviesRepository.getMovieDetails(movie)
+            .doOnSubscribe { _loadingStatusLiveData.value = LoadingStatus.LOADING }
+            .subscribe({
+                onDetailsLoadSuccessful(it)
+            }, {
+                onDetailsLoadFailed(it)
+            })
         compositeDisposable.add(disposable)
     }
 
     private fun onDetailsLoadSuccessful(movieDetails: MovieDetails) {
-        loadingIndicatorLiveData.value = false
-        movieDetailsLiveData.value = movieDetails
+        _loadingStatusLiveData.value = LoadingStatus.LOADING_SUCCESS
+        _movieDetailsLiveData.value = movieDetails
     }
 
     private fun onDetailsLoadFailed(throwable: Throwable) {
         Log.d(KEY_LOG, throwable.message)
-        loadingIndicatorLiveData.value = false
-        loadFailedLiveData.value = true
+        _loadingStatusLiveData.value = LoadingStatus.loadingError(throwable.message)
     }
 
     override fun onCleared() {

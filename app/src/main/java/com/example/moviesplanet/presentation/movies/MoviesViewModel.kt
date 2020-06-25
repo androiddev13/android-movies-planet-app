@@ -8,9 +8,12 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.example.moviesplanet.data.MoviesDataSourceFactory
 import com.example.moviesplanet.data.MoviesRepository
-import com.example.moviesplanet.data.PagingLoadingStatus
+import com.example.moviesplanet.data.model.LoadingStatus
 import com.example.moviesplanet.data.model.Movie
 import com.example.moviesplanet.data.model.SortingOption
+import com.example.moviesplanet.presentation.MovieDetailsNavigation
+import com.example.moviesplanet.presentation.MyFavoritesNavigation
+import com.example.moviesplanet.presentation.Navigation
 import com.example.moviesplanet.presentation.generic.LiveDataEvent
 import javax.inject.Inject
 
@@ -24,11 +27,11 @@ class MoviesViewModel @Inject constructor(private val moviesRepository: MoviesRe
     private val _moviesLoadingStatusLiveData = Transformations.switchMap(movieDataSourceFactory.repositoryDataSourceLiveData) {
         it.loadingStatusLiveData
     }
-    val moviesLoadingStatusLiveData: LiveData<PagingLoadingStatus>
+    val moviesLoadingStatusLiveData: LiveData<LoadingStatus>
         get() = _moviesLoadingStatusLiveData
 
-    private val _moviesNavigationLiveData = MutableLiveData<LiveDataEvent<MoviesNavigation>>()
-    val moviesNavigationLiveData: LiveData<LiveDataEvent<MoviesNavigation>>
+    private val _moviesNavigationLiveData = MutableLiveData<LiveDataEvent<Navigation>>()
+    val moviesNavigationLiveData: LiveData<LiveDataEvent<Navigation>>
         get() = _moviesNavigationLiveData
 
     init {
@@ -58,11 +61,11 @@ class MoviesViewModel @Inject constructor(private val moviesRepository: MoviesRe
     }
 
     fun onMyFavoritesClick() {
-        _moviesNavigationLiveData.value = LiveDataEvent(MoviesNavigation.toMyFavorites())
+        _moviesNavigationLiveData.value = LiveDataEvent(MyFavoritesNavigation)
     }
 
     fun onMovieClick(movie: Movie) {
-        _moviesNavigationLiveData.value = LiveDataEvent(MoviesNavigation.toMovieDetails(movie))
+        _moviesNavigationLiveData.value = LiveDataEvent(MovieDetailsNavigation(movie))
     }
 
     companion object {

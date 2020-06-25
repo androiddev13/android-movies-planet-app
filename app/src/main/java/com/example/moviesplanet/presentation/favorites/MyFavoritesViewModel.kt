@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.moviesplanet.data.MoviesRepository
 import com.example.moviesplanet.data.model.Movie
+import com.example.moviesplanet.presentation.MovieDetailsNavigation
+import com.example.moviesplanet.presentation.Navigation
 import com.example.moviesplanet.presentation.generic.LiveDataEvent
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -16,8 +18,8 @@ class MyFavoritesViewModel @Inject constructor(private val moviesRepository: Mov
     val favoriteMoviesLiveData: LiveData<List<Movie>>
         get() = _favoriteMoviesLiveData
 
-    private val _favoritesNavigationLiveData = MutableLiveData<LiveDataEvent<MyFavoritesNavigation>>()
-    val favoritesNavigationLiveData: LiveData<LiveDataEvent<MyFavoritesNavigation>>
+    private val _favoritesNavigationLiveData = MutableLiveData<LiveDataEvent<Navigation>>()
+    val favoritesNavigationLiveData: LiveData<LiveDataEvent<Navigation>>
         get() = _favoritesNavigationLiveData
 
     private val compositeDisposable = CompositeDisposable()
@@ -26,13 +28,8 @@ class MyFavoritesViewModel @Inject constructor(private val moviesRepository: Mov
         loadMovies()
     }
 
-    // TODO
-    //fun reloadMyFavorites() {
-    //    loadMovies()
-    //}
-
     fun onMovieClick(movie: Movie) {
-        _favoritesNavigationLiveData.value = LiveDataEvent(MyFavoritesNavigation.toMovieDetails(movie))
+        _favoritesNavigationLiveData.value = LiveDataEvent(MovieDetailsNavigation(movie))
     }
 
     private fun loadMovies() {

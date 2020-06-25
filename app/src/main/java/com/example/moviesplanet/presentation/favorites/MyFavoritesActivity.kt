@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesplanet.R
+import com.example.moviesplanet.presentation.MovieDetailsNavigation
 import com.example.moviesplanet.presentation.generic.LiveDataEventObserver
 import com.example.moviesplanet.presentation.moviedetails.MovieDetailsActivity
 import dagger.android.AndroidInjection
@@ -42,7 +43,9 @@ class MyFavoritesActivity : AppCompatActivity() {
         })
 
         viewModel.favoritesNavigationLiveData.observe(this, LiveDataEventObserver {
-            startActivity(MovieDetailsActivity.getIntent(this, it.movie))
+            when (it) {
+                is MovieDetailsNavigation -> startActivity(MovieDetailsActivity.getIntent(this, it.movie))
+            }
         })
     }
 

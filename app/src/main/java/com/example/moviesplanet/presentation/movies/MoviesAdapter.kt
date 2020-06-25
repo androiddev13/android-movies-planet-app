@@ -6,12 +6,11 @@ import android.view.ViewGroup
 import androidx.paging.PagedList
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.moviesplanet.R
-import com.example.moviesplanet.data.PagingLoadingStatus
-import com.example.moviesplanet.data.Status
+import com.example.moviesplanet.data.model.LoadingStatus
+import com.example.moviesplanet.data.model.Status
 import com.example.moviesplanet.data.model.Movie
 import com.squareup.picasso.Picasso
 import kotlinx.android.extensions.LayoutContainer
@@ -26,7 +25,7 @@ class MoviesAdapter(private val onClick: (Movie) -> Unit,
         MOVIE(0), LOADING_STATUS(1)
     }
 
-    private var loadingStatus: PagingLoadingStatus? = null
+    private var loadingStatus: LoadingStatus? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater =  LayoutInflater.from(parent.context)
@@ -56,14 +55,14 @@ class MoviesAdapter(private val onClick: (Movie) -> Unit,
     }
 
     private fun hasExtraRow(): Boolean {
-        return loadingStatus != null && loadingStatus != PagingLoadingStatus.LOADING_SUCCESS
+        return loadingStatus != null && loadingStatus != LoadingStatus.LOADING_SUCCESS
     }
 
     fun setData(items: PagedList<Movie>) {
         submitList(items)
     }
 
-    fun setLoadingStatus(newLoadingStatus: PagingLoadingStatus) {
+    fun setLoadingStatus(newLoadingStatus: LoadingStatus) {
         if (currentList != null) {
             if (currentList!!.size != 0) {
                 val previousState = loadingStatus
@@ -97,7 +96,7 @@ class MoviesAdapter(private val onClick: (Movie) -> Unit,
     }
 
     inner class MovieLoadingStatusViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
-        fun bind(item: PagingLoadingStatus?) {
+        fun bind(item: LoadingStatus?) {
             itemView.errorMessageTextView.text = item?.message
             itemView.errorMessageView.visibility = if (item?.status == Status.LOADING_FAILED) View.VISIBLE else View.INVISIBLE
             itemView.tryAgainButton.setOnClickListener { onRetryClick() }

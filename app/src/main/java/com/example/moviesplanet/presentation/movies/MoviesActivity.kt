@@ -12,7 +12,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.moviesplanet.R
-import com.example.moviesplanet.data.Status
+import com.example.moviesplanet.data.model.Status
+import com.example.moviesplanet.presentation.MovieDetailsNavigation
+import com.example.moviesplanet.presentation.MyFavoritesNavigation
 import com.example.moviesplanet.presentation.favorites.MyFavoritesActivity
 import com.example.moviesplanet.presentation.generic.LiveDataEventObserver
 import com.example.moviesplanet.presentation.moviedetails.MovieDetailsActivity
@@ -66,9 +68,9 @@ class MoviesActivity : AppCompatActivity() {
         })
 
         viewModel.moviesNavigationLiveData.observe(this, LiveDataEventObserver {
-            when (it.navigation) {
-                Navigation.MOVIE_DETAILS -> startActivity(MovieDetailsActivity.getIntent(this, it.movie))
-                Navigation.MY_FAVORITES -> startActivity(MyFavoritesActivity.getIntent(this))
+            when (it) {
+                is MovieDetailsNavigation -> startActivity(MovieDetailsActivity.getIntent(this, it.movie))
+                is MyFavoritesNavigation -> startActivity(MyFavoritesActivity.getIntent(this))
             }
         })
     }
