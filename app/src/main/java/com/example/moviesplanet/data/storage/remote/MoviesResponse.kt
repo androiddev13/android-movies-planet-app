@@ -20,6 +20,6 @@ data class MoviesResponse (
     @SerializedName("vote_average") val voteAverage: Double) {
 
     fun toMovie() =
-        Movie(id, originalTitle, releaseDate ?:"", MoviesServiceApi.MOVIES_IMAGE_BASE_URL + posterPath, voteAverage, overview)
+        Movie(id, originalTitle, releaseDate ?:"", MoviesServiceApi.MOVIES_IMAGE_BASE_URL + posterPath, voteAverage, overview, genreIds?: listOf())
 
 }

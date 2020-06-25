@@ -56,7 +56,7 @@ class MovieDetailsViewModel @Inject constructor(private val moviesRepository: Mo
             .doOnSubscribe { favoriteLoadingIndicatorLiveData.value = true }
             .subscribe({
                 favoriteLoadingIndicatorLiveData.value = false
-                movieDetailsLiveData.value = MovieDetails(movie,  false, movieDetailsLiveData.value?.externalInfo?: listOf())
+                movieDetailsLiveData.value = movieDetailsLiveData.value?.copy(isFavorite = false)
             }, {
                 Log.d(KEY_LOG, it.message)
                 favoriteLoadingIndicatorLiveData.value = false
@@ -70,7 +70,7 @@ class MovieDetailsViewModel @Inject constructor(private val moviesRepository: Mo
             .doOnSubscribe { favoriteLoadingIndicatorLiveData.value = true }
             .subscribe({
                 favoriteLoadingIndicatorLiveData.value = false
-                movieDetailsLiveData.value = MovieDetails(movie,  true, movieDetailsLiveData.value?.externalInfo?: listOf())
+                movieDetailsLiveData.value = movieDetailsLiveData.value?.copy(isFavorite = true)
             }, {
                 Log.d(KEY_LOG, it.message)
                 favoriteLoadingIndicatorLiveData.value = false

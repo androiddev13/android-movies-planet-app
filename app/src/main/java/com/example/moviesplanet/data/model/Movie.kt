@@ -9,9 +9,10 @@ data class Movie (val id: Int,
                   val releaseDate: String,
                   val posterPath: String,
                   val voteAverage: Double,
-                  val overview: String) : Parcelable {
+                  val overview: String,
+                  val genres: List<Int>) : Parcelable {
 
     companion object {
-        fun getEmpty() = Movie(0, "", "", "", 0.0, "")
+        fun getEmpty() = Movie(0, "", "", "", 0.0, "", listOf())
     }
 }
