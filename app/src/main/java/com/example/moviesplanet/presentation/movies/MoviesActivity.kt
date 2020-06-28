@@ -15,9 +15,11 @@ import com.example.moviesplanet.R
 import com.example.moviesplanet.data.model.Status
 import com.example.moviesplanet.presentation.MovieDetailsNavigation
 import com.example.moviesplanet.presentation.MyFavoritesNavigation
+import com.example.moviesplanet.presentation.SettingsNavigation
 import com.example.moviesplanet.presentation.favorites.MyFavoritesActivity
 import com.example.moviesplanet.presentation.generic.LiveDataEventObserver
 import com.example.moviesplanet.presentation.moviedetails.MovieDetailsActivity
+import com.example.moviesplanet.presentation.settings.SettingsActivity
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main_content.*
@@ -71,6 +73,7 @@ class MoviesActivity : AppCompatActivity() {
             when (it) {
                 is MovieDetailsNavigation -> startActivity(MovieDetailsActivity.getIntent(this, it.movie))
                 is MyFavoritesNavigation -> startActivity(MyFavoritesActivity.getIntent(this))
+                is SettingsNavigation -> startActivity(SettingsActivity.getIntent(this))
             }
         })
     }
@@ -87,6 +90,7 @@ class MoviesActivity : AppCompatActivity() {
         navigationView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.menuFavorites -> viewModel.onMyFavoritesClick()
+                R.id.menuSetting -> viewModel.onSettingsClick()
             }
             drawerLayout.closeDrawer(GravityCompat.START)
             true

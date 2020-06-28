@@ -10,6 +10,11 @@
     <string name="menu_personal_info">Personal Info</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_my_favorites">My Favorites</string>
+
+    <!-- My Favorites screen. -->
     <string name="title_my_favorite_movies">My Favorite Movies</string>
     <string name="my_favorites_no_movies">You don\'t have any favorite movies.</string>
+
+    <!-- Settings screen. -->
+    <string name="title_settings">Settings</string>
 </resources>

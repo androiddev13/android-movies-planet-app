@@ -14,6 +14,7 @@ import com.example.moviesplanet.data.model.SortingOption
 import com.example.moviesplanet.presentation.MovieDetailsNavigation
 import com.example.moviesplanet.presentation.MyFavoritesNavigation
 import com.example.moviesplanet.presentation.Navigation
+import com.example.moviesplanet.presentation.SettingsNavigation
 import com.example.moviesplanet.presentation.generic.LiveDataEvent
 import javax.inject.Inject
 
@@ -66,6 +67,10 @@ class MoviesViewModel @Inject constructor(private val moviesRepository: MoviesRe
 
     fun onMovieClick(movie: Movie) {
         _moviesNavigationLiveData.value = LiveDataEvent(MovieDetailsNavigation(movie))
+    }
+
+    fun onSettingsClick() {
+        _moviesNavigationLiveData.value = LiveDataEvent(SettingsNavigation)
     }
 
     companion object {
