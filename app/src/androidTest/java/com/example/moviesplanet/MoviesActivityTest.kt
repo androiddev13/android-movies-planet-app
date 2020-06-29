@@ -24,9 +24,9 @@ class MoviesActivityTest : AndroidJUnitRunner() {
     @get:Rule
     val activityTestRule = ActivityTestRule<MoviesActivity>(MoviesActivity::class.java)
 
-    @Before
-    fun before() {
+    override fun onStart() {
         RxJavaPlugins.setInitIoSchedulerHandler(Rx2Idler.create("RxJava 2.x IO Scheduler"));
+        super.onStart()
     }
 
     @Test
