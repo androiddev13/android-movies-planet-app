@@ -37,10 +37,8 @@ class MyFavoritesAdapter(private val onClick: (Movie) -> Unit) : RecyclerView.Ad
     inner class FavoriteViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
         fun bind(item: Movie) {
-            Picasso.with(containerView.context)
-                .load(item.posterPath)
-                .into(movieImageView)
-            movieTextView.text = item.title
+            titleTextView.text = item.title
+            subtitleTextView.text = item.overview
             containerView.setOnClickListener { onClick(item) }
         }
     }

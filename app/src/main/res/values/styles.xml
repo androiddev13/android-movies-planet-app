@@ -20,4 +20,15 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
     </style>
 
+    <style name="ListItemTitle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+    </style>
+
+    <style name="ListItemSubtitle">
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
+    </style>
+
 </resources>

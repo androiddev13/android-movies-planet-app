@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesplanet.R
 import com.example.moviesplanet.presentation.MovieDetailsNavigation
 import com.example.moviesplanet.presentation.generic.LiveDataEventObserver
+import com.example.moviesplanet.presentation.generic.VerticalDividerItemDecoration
 import com.example.moviesplanet.presentation.moviedetails.MovieDetailsActivity
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_movie_details.*
@@ -66,6 +67,7 @@ class MyFavoritesActivity : AppCompatActivity() {
         val manager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         moviesRecyclerView.apply {
             layoutManager = manager
+            addItemDecoration(VerticalDividerItemDecoration(context))
             adapter = MyFavoritesAdapter {
                 viewModel.onMovieClick(it)
             }
