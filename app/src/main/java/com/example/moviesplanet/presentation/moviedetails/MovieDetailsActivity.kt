@@ -17,6 +17,7 @@ import com.example.moviesplanet.data.model.Movie
 import com.example.moviesplanet.data.model.Status
 import com.example.moviesplanet.presentation.ExternalWebPageNavigation
 import com.example.moviesplanet.presentation.generic.LiveDataEventObserver
+import com.example.moviesplanet.presentation.generic.VerticalDividerItemDecoration
 import com.squareup.picasso.Picasso
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_movie_details.*
@@ -111,6 +112,12 @@ class MovieDetailsActivity : AppCompatActivity() {
         title = ""
 
         val manager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        infoRecyclerView.apply {
+            addItemDecoration(VerticalDividerItemDecoration(context))
+            layoutManager = manager
+            isNestedScrollingEnabled = false
+            adapter = MovieExternalInfoAdapter { movieExternalInfo -> viewModel.onExternalInfoClick(movieExternalInfo)  }
+        }
         infoRecyclerView.layoutManager = manager
         infoRecyclerView.isNestedScrollingEnabled = false
         infoRecyclerView.adapter = MovieExternalInfoAdapter { movieExternalInfo -> viewModel.onExternalInfoClick(movieExternalInfo)  }
