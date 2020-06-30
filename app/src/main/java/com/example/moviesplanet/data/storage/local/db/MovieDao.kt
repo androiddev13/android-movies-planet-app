@@ -17,7 +17,7 @@ interface MovieDao {
     @Delete
     fun removeMovie(movie: MovieEntity): Completable
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addGenres(genresEntity: List<GenreEntity>): Completable
 
     @Insert
