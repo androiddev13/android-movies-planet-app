@@ -49,7 +49,8 @@ class MovieDetailsActivity : AppCompatActivity() {
             infoYearTextView.text = it.movie.releaseDate
             infoRateTextView.text = getString(R.string.rate_format, it.movie.voteAverage)
             descriptionTextView.text = it.movie.overview
-            genresTextView.text = it.movieGenres.map { genre -> genre.name }.joinToString()
+            genresTextView.visibility = if (it.movieGenres.isNotEmpty()) View.VISIBLE else View.GONE
+            genresTextView.text = it.movieGenres.joinToString { genre -> genre.name }
 
             val favImageViewSrc = if (it.isFavorite) R.drawable.ic_favorite_white else R.drawable.ic_favorite_border_white
             favImageView.setImageResource(favImageViewSrc)
