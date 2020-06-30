@@ -5,6 +5,9 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 
+/**
+ * Dao to work with favorite movies and data which is related to them.
+ */
 @Dao
 interface MovieDao {
 
@@ -14,7 +17,19 @@ interface MovieDao {
     @Delete
     fun removeMovie(movie: MovieEntity): Completable
 
-    @Query("SELECT * from movieentity")
-    fun getMovies(): Observable<List<MovieEntity>>
+    @Insert
+    fun addGenres(genresEntity: List<GenreEntity>): Completable
 
+    @Insert
+    fun addMovieGenres(movieGenres: List<MovieGenreCrossRef>): Completable
+
+    @Query("DELETE from moviegenrecrossref WHERE movieId = :movieId")
+    fun removeMovieGenre(movieId: Int): Completable
+
+    @Transaction
+    @Query("SELECT * from movieentity")
+    fun getMoviesWithGenres(): Observable<List<MovieWithGenres>>
+
+    @Query("SELECT * from moviegenrecrossref")
+    fun getMovieGenreCrossRef(): Single<List<MovieGenreCrossRef>>
 }
