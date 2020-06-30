@@ -89,6 +89,9 @@ class MoviesAdapter(private val onClick: (Movie) -> Unit,
             item?.let {
                 Picasso.with(containerView.context)
                     .load(item.posterPath)
+                    .fit()
+                    .placeholder(R.drawable.placeholder_movie)
+                    .error(R.drawable.placeholder_movie)
                     .into(posterImageView)
                 posterImageView.setOnClickListener { onClick(item) }
             }
