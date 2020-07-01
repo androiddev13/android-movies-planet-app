@@ -5,6 +5,7 @@ import com.example.moviesplanet.presentation.movies.MoviesViewModel
 import com.example.moviesplanet.di.ViewModelKey
 import com.example.moviesplanet.presentation.favorites.MyFavoritesViewModel
 import com.example.moviesplanet.presentation.moviedetails.MovieDetailsViewModel
+import com.example.moviesplanet.presentation.settings.SettingsViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -26,5 +27,10 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(MyFavoritesViewModel::class)
     abstract fun bindMyFavoritesViewModel(myFavoritesViewModel: MyFavoritesViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SettingsViewModel::class)
+    abstract fun bindSettingsViewModel(settingsViewModel: SettingsViewModel): ViewModel
 
 }
