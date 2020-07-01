@@ -90,6 +90,7 @@ class MoviesAdapter(private val onClick: (Movie) -> Unit,
                 Picasso.with(containerView.context)
                     .load(item.posterPath)
                     .fit()
+                    .noFade()
                     .placeholder(R.drawable.placeholder_movie)
                     .error(R.drawable.placeholder_movie)
                     .into(posterImageView)
