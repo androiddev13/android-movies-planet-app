@@ -16,7 +16,8 @@ class DefaultMoviesRepository constructor(private val api: MoviesServiceApi,
                                           private val movieDao: MovieDao) : MoviesRepository {
 
     /**
-     * In-memory cache for list of [MovieGenre].
+     * In-memory cache for list of [MovieGenre] to avoid fetching it each time movie details is
+     * required during application lifecycle.
      */
     private var genres = listOf<MovieGenre>()
 

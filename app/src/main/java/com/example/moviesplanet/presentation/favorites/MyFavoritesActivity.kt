@@ -17,7 +17,6 @@ import com.example.moviesplanet.presentation.generic.LiveDataEventObserver
 import com.example.moviesplanet.presentation.generic.VerticalDividerItemDecoration
 import com.example.moviesplanet.presentation.moviedetails.MovieDetailsActivity
 import dagger.android.AndroidInjection
-import kotlinx.android.synthetic.main.activity_movie_details.*
 import kotlinx.android.synthetic.main.activity_my_favorites.*
 import javax.inject.Inject
 
