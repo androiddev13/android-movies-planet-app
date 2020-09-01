@@ -1,0 +1,11 @@
+dependencies {
+    testImplementation "junit:junit:$junit_version"
+    testImplementation "androidx.arch.core:core-testing:$androidx_core_testing_version"
+    testImplementation "org.mockito:mockito-core:$mockito_version"
+
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_version"
+    androidTestImplementation 'com.squareup.rx.idler:rx2-idler:0.11.0'
+}
