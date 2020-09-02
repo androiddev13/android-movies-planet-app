@@ -1,7 +1,6 @@
 package com.example.moviesplanet
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
 import com.example.moviesplanet.data.MoviesRepository
 import com.example.moviesplanet.data.model.Movie
 import com.example.moviesplanet.presentation.MovieDetailsNavigation

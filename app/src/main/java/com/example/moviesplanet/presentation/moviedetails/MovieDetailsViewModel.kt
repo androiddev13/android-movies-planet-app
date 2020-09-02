@@ -1,6 +1,5 @@
 package com.example.moviesplanet.presentation.moviedetails
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,6 +12,7 @@ import com.example.moviesplanet.presentation.ExternalWebPageNavigation
 import com.example.moviesplanet.presentation.Navigation
 import com.example.moviesplanet.presentation.generic.LiveDataEvent
 import io.reactivex.disposables.CompositeDisposable
+import timber.log.Timber
 import javax.inject.Inject
 
 class MovieDetailsViewModel @Inject constructor(private val moviesRepository: MoviesRepository) : ViewModel() {
@@ -68,7 +68,7 @@ class MovieDetailsViewModel @Inject constructor(private val moviesRepository: Mo
                 _favoriteLoadingIndicatorLiveData.value = false
                 _movieDetailsLiveData.value = _movieDetailsLiveData.value?.copy(isFavorite = false)
             }, {
-                Log.d(KEY_LOG, it.message)
+                Timber.d(it)
                 _favoriteLoadingIndicatorLiveData.value = false
             })
         compositeDisposable.add(disposable)
@@ -81,7 +81,7 @@ class MovieDetailsViewModel @Inject constructor(private val moviesRepository: Mo
                 _favoriteLoadingIndicatorLiveData.value = false
                 _movieDetailsLiveData.value = _movieDetailsLiveData.value?.copy(isFavorite = true)
             }, {
-                Log.d(KEY_LOG, it.message)
+                Timber.d(it)
                 _favoriteLoadingIndicatorLiveData.value = false
             })
         compositeDisposable.add(disposable)
@@ -104,16 +104,12 @@ class MovieDetailsViewModel @Inject constructor(private val moviesRepository: Mo
     }
 
     private fun onDetailsLoadFailed(throwable: Throwable) {
-        Log.d(KEY_LOG, throwable.message)
+        Timber.d(throwable)
         _loadingStatusLiveData.value = LoadingStatus.loadingError(throwable.message)
     }
 
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.clear()
-    }
-
-    companion object {
-        const val KEY_LOG = "Movie_detail_view_model"
     }
 }
