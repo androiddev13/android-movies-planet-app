@@ -10,6 +10,7 @@ import com.example.moviesplanet.presentation.MovieDetailsNavigation
 import com.example.moviesplanet.presentation.Navigation
 import com.example.moviesplanet.presentation.generic.LiveDataEvent
 import io.reactivex.disposables.CompositeDisposable
+import timber.log.Timber
 import javax.inject.Inject
 
 class MyFavoritesViewModel @Inject constructor(private val moviesRepository: MoviesRepository) : ViewModel() {
@@ -36,7 +37,7 @@ class MyFavoritesViewModel @Inject constructor(private val moviesRepository: Mov
         val disposable = moviesRepository.getFavoriteMovies().subscribe({
             _favoriteMoviesLiveData.value = it
         }, {
-            Log.d(KEY_LOG, "$it")
+            Timber.d(it)
             _favoriteMoviesLiveData.value = listOf()
         })
         compositeDisposable.add(disposable)
@@ -45,9 +46,5 @@ class MyFavoritesViewModel @Inject constructor(private val moviesRepository: Mov
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.clear()
-    }
-
-    companion object {
-        const val KEY_LOG = "Movie_my_favorites"
     }
 }

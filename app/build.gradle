@@ -77,4 +77,7 @@ dependencies {
 
     // Paging library.
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
+
+    // Timber.
+    implementation "com.jakewharton.timber:timber:$timber_version"
 }
