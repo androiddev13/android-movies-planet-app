@@ -4,17 +4,12 @@ import org.junit.Rule
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
-import androidx.paging.PagedList
 import com.example.moviesplanet.data.MoviesDataSourceFactory
 import com.example.moviesplanet.data.MoviesRepository
-import com.example.moviesplanet.data.model.LoadingStatus
 import com.example.moviesplanet.data.model.Movie
 import com.example.moviesplanet.presentation.MovieDetailsNavigation
 import com.example.moviesplanet.presentation.MyFavoritesNavigation
-import com.example.moviesplanet.presentation.Navigation
 import com.example.moviesplanet.presentation.SettingsNavigation
-import com.example.moviesplanet.presentation.generic.LiveDataEventObserver
 import com.example.moviesplanet.presentation.movies.MoviesViewModel
 import org.junit.Assert.*
 import org.junit.Before
@@ -34,34 +29,33 @@ class MovieViewModelTest {
     @Mock
     lateinit var moviesDataSourceFactory: MoviesDataSourceFactory
 
-    @Mock
-    lateinit var navigationObserver: LiveDataEventObserver<Navigation>
-
     private lateinit var viewModel: MoviesViewModel
 
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
         viewModel = MoviesViewModel(moviesRepository, moviesDataSourceFactory)
-        viewModel.moviesNavigationLiveData.observeForever(navigationObserver)
     }
 
     @Test
-    fun testMyFavoritesClick() {
+    fun favoritesClicked_sendsNavigationEvent() {
         viewModel.onMyFavoritesClick()
-        assertEquals(viewModel.moviesNavigationLiveData.value?.peekContent(), MyFavoritesNavigation)
+        val navigation = viewModel.moviesNavigationLiveData.getOrAwaitValue().peekContent()
+        assertEquals(navigation, MyFavoritesNavigation)
     }
 
     @Test
-    fun testMovieClick() {
+    fun movieClicked_sendsNavigationEvent() {
         val movie = Movie.getEmpty()
         viewModel.onMovieClick(movie)
-        assertSame((viewModel.moviesNavigationLiveData.value?.peekContent() as MovieDetailsNavigation).movie, movie)
+        val navigation = viewModel.moviesNavigationLiveData.getOrAwaitValue().peekContent() as MovieDetailsNavigation
+        assertSame(navigation.movie, movie)
     }
 
     @Test
-    fun testSettingClick() {
+    fun settingsClicked_sendsNavigationEvent() {
         viewModel.onSettingsClick()
-        assertEquals(viewModel.moviesNavigationLiveData.value?.peekContent(), SettingsNavigation)
+        val navigation = viewModel.moviesNavigationLiveData.getOrAwaitValue().peekContent()
+        assertEquals(navigation, SettingsNavigation)
     }
 }
