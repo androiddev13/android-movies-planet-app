@@ -3,7 +3,7 @@ package com.example.moviesplanet.di.module
 import android.app.Application
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import com.example.moviesplanet.data.storage.local.AppPreferences
+import com.example.moviesplanet.data.storage.local.MoviesPreferences
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -13,8 +13,8 @@ class PreferencesModule {
 
     @Provides
     @Singleton
-    fun provideAppPreferences(sharedPreferences: SharedPreferences): AppPreferences {
-        return AppPreferences(sharedPreferences)
+    fun provideMoviesPreferences(sharedPreferences: SharedPreferences): MoviesPreferences {
+        return MoviesPreferences(sharedPreferences)
     }
 
     @Provides

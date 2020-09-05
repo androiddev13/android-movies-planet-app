@@ -11,8 +11,8 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Action
 import io.reactivex.schedulers.Schedulers
 
-class MoviesDataSource(private val moviesRepository: MoviesRepository,
-                       private val compositeDisposable: CompositeDisposable) : PageKeyedDataSource<Long, Movie>() {
+class MoviesPageKeyedDataSource(private val moviesRepository: MoviesRepository,
+                                private val compositeDisposable: CompositeDisposable) : PageKeyedDataSource<Long, Movie>() {
 
     private val _loadingStatusLiveData = MutableLiveData<LoadingStatus>()
     val loadingStatusLiveData: LiveData<LoadingStatus>

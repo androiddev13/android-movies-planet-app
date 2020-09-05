@@ -1,6 +1,7 @@
-package com.example.moviesplanet.data.storage.remote
+package com.example.moviesplanet.data.storage.remote.model
 
 import com.example.moviesplanet.data.model.MovieExternalInfo
+import com.example.moviesplanet.data.storage.remote.MoviesServiceApi
 import com.google.gson.annotations.SerializedName
 
 data class VideoResponse (@SerializedName("id") val id: String,

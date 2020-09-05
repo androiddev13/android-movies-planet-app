@@ -1,5 +1,9 @@
 package com.example.moviesplanet.data.storage.remote
 
+import com.example.moviesplanet.data.storage.remote.model.GenreListResponse
+import com.example.moviesplanet.data.storage.remote.model.MovieListResponse
+import com.example.moviesplanet.data.storage.remote.model.ReviewListResponse
+import com.example.moviesplanet.data.storage.remote.model.VideoListResponse
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -23,5 +27,9 @@ interface MoviesServiceApi {
         const val MOVIES_BASE_URL = "http://api.themoviedb.org/"
         const val MOVIES_IMAGE_BASE_URL = "http://image.tmdb.org/t/p/w185/"
         const val MOVIES_VIDEO_BASE_URL = "http://youtube.com/watch?v="
+
+        const val KEY_SORT_POPULAR = "popular"
+        const val KEY_SORT_TOP_RATED = "top_rated"
+        const val KEY_SORT_UPCOMING = "upcoming"
     }
 }

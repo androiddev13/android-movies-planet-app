@@ -1,11 +1,12 @@
 package com.example.moviesplanet.di.module
 
-import com.example.moviesplanet.data.storage.local.AppPreferences
 import com.example.moviesplanet.data.DefaultMoviesRepository
 import com.example.moviesplanet.data.MoviesDataSourceFactory
 import com.example.moviesplanet.data.MoviesRepository
+import com.example.moviesplanet.data.storage.local.MoviesLocalDataSource
+import com.example.moviesplanet.data.storage.local.MoviesPreferences
 import com.example.moviesplanet.data.storage.local.db.MovieDao
-import com.example.moviesplanet.data.storage.local.db.MovieRoomDatabase
+import com.example.moviesplanet.data.storage.remote.MoviesRemoteDataSource
 import com.example.moviesplanet.data.storage.remote.MoviesServiceApi
 import dagger.Module
 import dagger.Provides
@@ -17,10 +18,23 @@ class DataModule {
 
     @Singleton
     @Provides
-    fun provideMoviesRepository(api: MoviesServiceApi,
-                                appPreferences: AppPreferences,
+    fun provideMoviesRepository(moviesRemoteDataSource: MoviesRemoteDataSource,
+                                moviesLocalDataSource: MoviesLocalDataSource,
                                 movieDao: MovieDao): MoviesRepository {
-        return DefaultMoviesRepository(api, appPreferences, movieDao)
+        return DefaultMoviesRepository(moviesRemoteDataSource, moviesLocalDataSource, movieDao)
+    }
+
+    @Singleton
+    @Provides
+    fun provideMoviesRemoteDataSource(api: MoviesServiceApi,
+                                      moviesLocalDataSource: MoviesLocalDataSource): MoviesRemoteDataSource {
+        return MoviesRemoteDataSource(api, moviesLocalDataSource)
+    }
+
+    @Singleton
+    @Provides
+    fun provideMoviesLocalDataSource(moviesPreferences: MoviesPreferences): MoviesLocalDataSource {
+        return MoviesLocalDataSource(moviesPreferences)
     }
 
     @Provides

@@ -1,9 +1,9 @@
 package com.example.moviesplanet.data
 
 import com.example.moviesplanet.data.model.*
-import com.example.moviesplanet.data.storage.remote.MoviesServiceApi
-import com.example.moviesplanet.data.storage.local.AppPreferences
+import com.example.moviesplanet.data.storage.local.MoviesLocalDataSource
 import com.example.moviesplanet.data.storage.local.db.*
+import com.example.moviesplanet.data.storage.remote.MoviesRemoteDataSource
 import io.reactivex.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
@@ -11,8 +11,8 @@ import io.reactivex.functions.Function3
 import io.reactivex.schedulers.Schedulers
 import java.lang.IllegalStateException
 
-class DefaultMoviesRepository constructor(private val api: MoviesServiceApi,
-                                          private val appPreferences: AppPreferences,
+class DefaultMoviesRepository constructor(private val remoteDataSource: MoviesRemoteDataSource,
+                                          private val localDataSource: MoviesLocalDataSource,
                                           private val movieDao: MovieDao) : MoviesRepository {
 
     /**
@@ -22,7 +22,7 @@ class DefaultMoviesRepository constructor(private val api: MoviesServiceApi,
     private var genres = listOf<MovieGenre>()
 
     override fun getMovies(page: Long): Single<List<Movie>> {
-        return api.getMovies(appPreferences.getCurrentSortingOption().sortOption, page)
+        return remoteDataSource.getMovies(page)
             .map { response ->
                 response.results
                     ?.map { it.toMovie() }
@@ -48,7 +48,7 @@ class DefaultMoviesRepository constructor(private val api: MoviesServiceApi,
     }
 
     override fun setCurrentSortingOption(sortingOption: SortingOption) {
-        appPreferences.setCurrentSortingOption(sortingOption)
+        localDataSource.setSortingOption(sortingOption)
     }
 
     override fun addToFavorite(movie: Movie): Completable {
@@ -75,7 +75,7 @@ class DefaultMoviesRepository constructor(private val api: MoviesServiceApi,
     }
 
     private fun getMovieReviewsExternalInfo(id: String): Single<List<MovieExternalInfo>> {
-        return api.getMovieReviews(id)
+        return remoteDataSource.getMovieReviews(id)
             .map {
                 it.results
                     ?.map { response -> response.toMovieExternalInfo() }
@@ -84,7 +84,7 @@ class DefaultMoviesRepository constructor(private val api: MoviesServiceApi,
     }
 
     private fun getMovieVideosExternalInfo(id: String): Single<List<MovieExternalInfo>> {
-        return api.getMovieVideos(id)
+        return remoteDataSource.getMovieVideos(id)
             .map {
                 it.results
                     ?.map { response -> response.toMovieExternalInfo() }
@@ -104,7 +104,7 @@ class DefaultMoviesRepository constructor(private val api: MoviesServiceApi,
     }
 
     private fun getGenres(): Single<List<MovieGenre>> {
-        return api.getMovieGenres()
+        return remoteDataSource.getGenres()
             .map { response ->
                 genres = response.genres?.map { MovieGenre(it.id, it.name) }?: listOf()
                 genres
