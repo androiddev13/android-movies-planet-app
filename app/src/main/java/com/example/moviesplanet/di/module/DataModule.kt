@@ -19,9 +19,8 @@ class DataModule {
     @Singleton
     @Provides
     fun provideMoviesRepository(moviesRemoteDataSource: MoviesRemoteDataSource,
-                                moviesLocalDataSource: MoviesLocalDataSource,
-                                movieDao: MovieDao): MoviesRepository {
-        return DefaultMoviesRepository(moviesRemoteDataSource, moviesLocalDataSource, movieDao)
+                                moviesLocalDataSource: MoviesLocalDataSource): MoviesRepository {
+        return DefaultMoviesRepository(moviesRemoteDataSource, moviesLocalDataSource)
     }
 
     @Singleton
@@ -33,8 +32,8 @@ class DataModule {
 
     @Singleton
     @Provides
-    fun provideMoviesLocalDataSource(moviesPreferences: MoviesPreferences): MoviesLocalDataSource {
-        return MoviesLocalDataSource(moviesPreferences)
+    fun provideMoviesLocalDataSource(moviesPreferences: MoviesPreferences, movieDao: MovieDao): MoviesLocalDataSource {
+        return MoviesLocalDataSource(moviesPreferences, movieDao)
     }
 
     @Provides

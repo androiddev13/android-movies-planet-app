@@ -12,8 +12,7 @@ import io.reactivex.schedulers.Schedulers
 import java.lang.IllegalStateException
 
 class DefaultMoviesRepository constructor(private val remoteDataSource: MoviesRemoteDataSource,
-                                          private val localDataSource: MoviesLocalDataSource,
-                                          private val movieDao: MovieDao) : MoviesRepository {
+                                          private val localDataSource: MoviesLocalDataSource) : MoviesRepository {
 
     /**
      * In-memory cache for list of [MovieGenre] to avoid fetching it each time movie details is
@@ -33,7 +32,7 @@ class DefaultMoviesRepository constructor(private val remoteDataSource: MoviesRe
     }
 
     override fun getMovieDetails(movie: Movie): Single<MovieDetails> {
-        return Single.zip(getMovieExternalInfo(movie), movieDao.getMoviesWithGenres().first(listOf()), getMovieGenres(movie), Function3<List<MovieExternalInfo>, List<MovieWithGenres>, List<MovieGenre>, MovieDetails> { t1, t2, t3 ->
+        return Single.zip(getMovieExternalInfo(movie), localDataSource.getFavoritesMovie().first(listOf()), getMovieGenres(movie), Function3<List<MovieExternalInfo>, List<Movie>, List<MovieGenre>, MovieDetails> { t1, t2, t3 ->
                 MovieDetails(movie, isFavoriteMovie(t2, movie.id), t1, t3)
         }).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -52,24 +51,19 @@ class DefaultMoviesRepository constructor(private val remoteDataSource: MoviesRe
     }
 
     override fun addToFavorite(movie: Movie): Completable {
-        return movieDao.addMovie(MovieEntity.from(movie))
-            .andThen(movieDao.addMovieGenres(movie.genres.map { MovieGenreCrossRef(movie.id, it) }))
+        return localDataSource.addMovieToFavorites(movie)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun removeFromFavorite(movie: Movie): Completable {
-        return movieDao.removeMovie(MovieEntity.from(movie))
-            .andThen(movieDao.removeMovieGenre(movie.id))
+        return localDataSource.removeMovieFromFavorites(movie)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun getFavoriteMovies(): Observable<List<Movie>> {
-        return movieDao.getMoviesWithGenres()
-            .map { favorites ->
-                favorites.map { Movie(it.movie.movieId, it.movie.name, it.movie.releaseDate, it.movie.posterPath, it.movie.voteAverage, it.movie.overview, it.genres.map { genre -> genre.genreId }) }
-            }
+        return localDataSource.getFavoritesMovie()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
@@ -92,8 +86,8 @@ class DefaultMoviesRepository constructor(private val remoteDataSource: MoviesRe
             }
     }
 
-    private fun isFavoriteMovie(favorites: List<MovieWithGenres>, id: Int): Boolean {
-        return favorites.find { it.movie.movieId == id } != null
+    private fun isFavoriteMovie(favorites: List<Movie>, id: Int): Boolean {
+        return favorites.find { it.id == id } != null
     }
 
     private fun getMovieGenres(movie: Movie): Single<List<MovieGenre>> {
@@ -110,7 +104,7 @@ class DefaultMoviesRepository constructor(private val remoteDataSource: MoviesRe
                 genres
             }
             .flatMap { genres ->
-                movieDao.addGenres(genres.map { GenreEntity(it.id, it.name) }).andThen(Single.just(genres))
+                localDataSource.addGenres(genres).andThen(Single.just(genres))
             }
     }
 }

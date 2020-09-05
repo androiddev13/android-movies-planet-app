@@ -29,7 +29,4 @@ interface MovieDao {
     @Transaction
     @Query("SELECT * from movieentity")
     fun getMoviesWithGenres(): Observable<List<MovieWithGenres>>
-
-    @Query("SELECT * from moviegenrecrossref")
-    fun getMovieGenreCrossRef(): Single<List<MovieGenreCrossRef>>
 }
