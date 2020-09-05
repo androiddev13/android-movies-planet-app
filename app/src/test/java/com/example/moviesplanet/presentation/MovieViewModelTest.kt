@@ -1,4 +1,4 @@
-package com.example.moviesplanet
+package com.example.moviesplanet.presentation
 
 import org.junit.Rule
 import org.junit.runner.RunWith
@@ -7,9 +7,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.moviesplanet.data.MoviesDataSourceFactory
 import com.example.moviesplanet.data.MoviesRepository
 import com.example.moviesplanet.data.model.Movie
-import com.example.moviesplanet.presentation.MovieDetailsNavigation
-import com.example.moviesplanet.presentation.MyFavoritesNavigation
-import com.example.moviesplanet.presentation.SettingsNavigation
+import com.example.moviesplanet.getOrAwaitValue
 import com.example.moviesplanet.presentation.movies.MoviesViewModel
 import org.junit.Assert.*
 import org.junit.Before
