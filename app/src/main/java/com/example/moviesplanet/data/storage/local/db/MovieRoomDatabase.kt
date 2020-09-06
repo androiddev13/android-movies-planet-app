@@ -1,6 +1,6 @@
 package com.example.moviesplanet.data.storage.local.db
 
-import android.app.Application
+import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -14,9 +14,9 @@ abstract class MovieRoomDatabase : RoomDatabase() {
 
         private const val MOVIE_DATABASE_NAME = "movie_database"
 
-        fun create(application: Application): MovieRoomDatabase {
+        fun create(context: Context): MovieRoomDatabase {
             return Room.databaseBuilder(
-                application.applicationContext,
+                context,
                 MovieRoomDatabase::class.java,
                 MOVIE_DATABASE_NAME
             ).build()

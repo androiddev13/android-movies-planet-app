@@ -13,7 +13,7 @@ class DatabaseModule {
     @Singleton
     @Provides
     fun provideMovieDatabase(application: Application): MovieRoomDatabase {
-        return MovieRoomDatabase.create(application)
+        return MovieRoomDatabase.create(application.applicationContext)
     }
 
     @Singleton
