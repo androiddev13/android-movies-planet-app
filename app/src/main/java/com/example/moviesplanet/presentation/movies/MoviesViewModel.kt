@@ -6,11 +6,10 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.example.moviesplanet.data.MoviesDataSourceFactory
-import com.example.moviesplanet.data.MoviesRepository
-import com.example.moviesplanet.data.model.LoadingStatus
-import com.example.moviesplanet.data.model.Movie
-import com.example.moviesplanet.data.model.SortingOption
+import com.example.data.MoviesRepository
+import com.example.data.model.LoadingStatus
+import com.example.data.model.Movie
+import com.example.data.model.SortingOption
 import com.example.moviesplanet.presentation.MovieDetailsNavigation
 import com.example.moviesplanet.presentation.MyFavoritesNavigation
 import com.example.moviesplanet.presentation.Navigation

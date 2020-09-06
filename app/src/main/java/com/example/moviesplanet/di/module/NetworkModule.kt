@@ -5,7 +5,7 @@ import android.content.Context
 import android.util.Log
 import com.example.moviesplanet.BuildConfig
 import com.example.moviesplanet.R
-import com.example.moviesplanet.data.storage.remote.MoviesServiceApi
+import com.example.data.storage.remote.MoviesServiceApi
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor

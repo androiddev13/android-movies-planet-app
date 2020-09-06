@@ -6,8 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesplanet.R
-import com.example.moviesplanet.data.model.Movie
-import com.squareup.picasso.Picasso
+import com.example.data.model.Movie
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_favorite_movie.*
 

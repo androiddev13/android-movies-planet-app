@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.moviesplanet.R
-import com.example.moviesplanet.data.model.Status
+import com.example.data.model.Status
 import com.example.moviesplanet.presentation.MovieDetailsNavigation
 import com.example.moviesplanet.presentation.MyFavoritesNavigation
 import com.example.moviesplanet.presentation.SettingsNavigation

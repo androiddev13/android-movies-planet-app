@@ -1,8 +1,8 @@
 package com.example.moviesplanet.presentation
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.example.moviesplanet.data.MoviesRepository
-import com.example.moviesplanet.data.model.Movie
+import com.example.data.MoviesRepository
+import com.example.data.model.Movie
 import com.example.moviesplanet.getOrAwaitValue
 import com.example.moviesplanet.presentation.favorites.MyFavoritesViewModel
 import io.reactivex.Observable

@@ -1,11 +1,11 @@
 package com.example.moviesplanet.presentation
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.example.moviesplanet.data.MoviesRepository
-import com.example.moviesplanet.data.model.LoadingStatus
-import com.example.moviesplanet.data.model.Movie
-import com.example.moviesplanet.data.model.MovieDetails
-import com.example.moviesplanet.data.model.MovieExternalInfo
+import com.example.data.MoviesRepository
+import com.example.data.model.LoadingStatus
+import com.example.data.model.Movie
+import com.example.data.model.MovieDetails
+import com.example.data.model.MovieExternalInfo
 import com.example.moviesplanet.getOrAwaitValue
 import com.example.moviesplanet.presentation.moviedetails.MovieDetailsViewModel
 import io.reactivex.Completable

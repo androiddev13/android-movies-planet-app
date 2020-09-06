@@ -13,8 +13,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesplanet.R
-import com.example.moviesplanet.data.model.Movie
-import com.example.moviesplanet.data.model.Status
+import com.example.data.model.Movie
+import com.example.data.model.Status
 import com.example.moviesplanet.presentation.ExternalWebPageNavigation
 import com.example.moviesplanet.presentation.generic.LiveDataEventObserver
 import com.example.moviesplanet.presentation.generic.VerticalDividerItemDecoration

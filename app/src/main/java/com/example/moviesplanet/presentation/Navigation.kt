@@ -1,6 +1,6 @@
 package com.example.moviesplanet.presentation
 
-import com.example.moviesplanet.data.model.Movie
+import com.example.data.model.Movie
 
 sealed class Navigation
 object MyFavoritesNavigation : Navigation()

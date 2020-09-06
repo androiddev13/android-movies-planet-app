@@ -1,13 +1,13 @@
 package com.example.moviesplanet.di.module
 
-import com.example.moviesplanet.data.DefaultMoviesRepository
-import com.example.moviesplanet.data.MoviesDataSourceFactory
-import com.example.moviesplanet.data.MoviesRepository
-import com.example.moviesplanet.data.storage.local.MoviesLocalDataSource
-import com.example.moviesplanet.data.storage.local.MoviesPreferences
-import com.example.moviesplanet.data.storage.local.db.MovieDao
-import com.example.moviesplanet.data.storage.remote.MoviesRemoteDataSource
-import com.example.moviesplanet.data.storage.remote.MoviesServiceApi
+import com.example.data.DefaultMoviesRepository
+import com.example.data.MoviesRepository
+import com.example.data.storage.local.MoviesLocalDataSource
+import com.example.data.storage.local.MoviesPreferences
+import com.example.data.storage.local.db.MovieDao
+import com.example.data.storage.remote.MoviesRemoteDataSource
+import com.example.data.storage.remote.MoviesServiceApi
+import com.example.moviesplanet.presentation.movies.MoviesDataSourceFactory
 import dagger.Module
 import dagger.Provides
 import io.reactivex.disposables.CompositeDisposable

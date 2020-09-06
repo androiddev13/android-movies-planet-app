@@ -14,8 +14,6 @@ import androidx.test.runner.AndroidJUnitRunner
 import com.example.moviesplanet.presentation.movies.MoviesActivity
 import com.squareup.rx2.idler.Rx2Idler
 import io.reactivex.plugins.RxJavaPlugins
-import org.junit.After
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 

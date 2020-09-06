@@ -1,11 +1,10 @@
 package com.example.moviesplanet.presentation.favorites
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.moviesplanet.data.MoviesRepository
-import com.example.moviesplanet.data.model.Movie
+import com.example.data.MoviesRepository
+import com.example.data.model.Movie
 import com.example.moviesplanet.presentation.MovieDetailsNavigation
 import com.example.moviesplanet.presentation.Navigation
 import com.example.moviesplanet.presentation.generic.LiveDataEvent

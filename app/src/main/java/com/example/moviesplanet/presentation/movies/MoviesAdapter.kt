@@ -9,9 +9,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.moviesplanet.R
-import com.example.moviesplanet.data.model.LoadingStatus
-import com.example.moviesplanet.data.model.Status
-import com.example.moviesplanet.data.model.Movie
+import com.example.data.model.LoadingStatus
+import com.example.data.model.Status
+import com.example.data.model.Movie
 import com.squareup.picasso.Picasso
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_movie.*

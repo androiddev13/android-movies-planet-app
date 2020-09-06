@@ -3,8 +3,9 @@ dependencies {
     testImplementation "androidx.arch.core:core-testing:$androidx_core_testing_version"
     testImplementation "org.mockito:mockito-core:$mockito_version"
 
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation "androidx.test:runner:$android_test_version"
+    androidTestImplementation "androidx.test:rules:$android_test_version"
+    androidTestImplementation "androidx.test.ext:junit:$android_test_ext_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_version"
     androidTestImplementation 'com.squareup.rx.idler:rx2-idler:0.11.0'

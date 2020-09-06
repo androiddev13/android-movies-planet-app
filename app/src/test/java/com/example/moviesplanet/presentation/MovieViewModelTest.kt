@@ -4,10 +4,10 @@ import org.junit.Rule
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.example.moviesplanet.data.MoviesDataSourceFactory
-import com.example.moviesplanet.data.MoviesRepository
-import com.example.moviesplanet.data.model.Movie
+import com.example.data.MoviesRepository
+import com.example.data.model.Movie
 import com.example.moviesplanet.getOrAwaitValue
+import com.example.moviesplanet.presentation.movies.MoviesDataSourceFactory
 import com.example.moviesplanet.presentation.movies.MoviesViewModel
 import org.junit.Assert.*
 import org.junit.Before

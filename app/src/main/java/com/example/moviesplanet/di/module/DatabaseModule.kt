@@ -1,8 +1,8 @@
 package com.example.moviesplanet.di.module
 
 import android.app.Application
-import com.example.moviesplanet.data.storage.local.db.MovieDao
-import com.example.moviesplanet.data.storage.local.db.MovieRoomDatabase
+import com.example.data.storage.local.db.MovieDao
+import com.example.data.storage.local.db.MovieRoomDatabase
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
