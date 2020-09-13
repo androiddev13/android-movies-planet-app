@@ -1,8 +1,7 @@
 package com.example.data.storage.local.db
 
 import androidx.room.*
-import io.reactivex.Completable
-import io.reactivex.Observable
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Dao to work with favorite movies and data which is related to them.
@@ -11,21 +10,21 @@ import io.reactivex.Observable
 interface MovieDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addMovie(movie: MovieEntity): Completable
+    suspend fun addMovie(movie: MovieEntity)
 
     @Delete
-    fun removeMovie(movie: MovieEntity): Completable
+    suspend fun removeMovie(movie: MovieEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addGenres(genresEntity: List<GenreEntity>): Completable
+    suspend fun addGenres(genresEntity: List<GenreEntity>)
 
     @Insert
-    fun addMovieGenres(movieGenres: List<MovieGenreCrossRef>): Completable
+    suspend fun addMovieGenres(movieGenres: List<MovieGenreCrossRef>)
 
     @Query("DELETE from moviegenrecrossref WHERE movieId = :movieId")
-    fun removeMovieGenre(movieId: Int): Completable
+    suspend fun removeMovieGenre(movieId: Int)
 
     @Transaction
     @Query("SELECT * from movieentity")
-    fun getMoviesWithGenres(): Observable<List<MovieWithGenres>>
+    fun getMoviesWithGenres(): Flow<List<MovieWithGenres>>
 }

@@ -4,7 +4,7 @@ import com.example.data.storage.remote.model.GenreListResponse
 import com.example.data.storage.remote.model.MovieListResponse
 import com.example.data.storage.remote.model.ReviewListResponse
 import com.example.data.storage.remote.model.VideoListResponse
-import io.reactivex.Single
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -12,16 +12,16 @@ import retrofit2.http.Query
 interface MoviesServiceApi {
 
     @GET("3/movie/{sort}")
-    fun getMovies(@Path("sort") sorted: String, @Query("page") page: Long): Single<MovieListResponse>
+    suspend fun getMovies(@Path("sort") sorted: String, @Query("page") page: Long): Response<MovieListResponse>
 
     @GET("3/movie/{id}/videos")
-    fun getMovieVideos(@Path("id") id: String): Single<VideoListResponse>
+    suspend fun getMovieVideos(@Path("id") id: String): Response<VideoListResponse>
 
     @GET("3/movie/{id}/reviews")
-    fun getMovieReviews(@Path("id") id: String): Single<ReviewListResponse>
+    suspend fun getMovieReviews(@Path("id") id: String): Response<ReviewListResponse>
 
     @GET("3/genre/movie/list")
-    fun getMovieGenres(): Single<GenreListResponse>
+    suspend fun getMovieGenres(): Response<GenreListResponse>
 
     companion object {
         const val MOVIES_BASE_URL = "http://api.themoviedb.org/"

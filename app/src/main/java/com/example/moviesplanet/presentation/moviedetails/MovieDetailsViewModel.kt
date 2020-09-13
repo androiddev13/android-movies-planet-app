@@ -3,16 +3,22 @@ package com.example.moviesplanet.presentation.moviedetails
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.data.MoviesRepository
 import com.example.data.model.LoadingStatus
 import com.example.data.model.Movie
 import com.example.data.model.MovieDetails
 import com.example.data.model.MovieExternalInfo
+import com.example.data.model.Result
+import com.example.data.utility.exhaustive
 import com.example.moviesplanet.presentation.ExternalWebPageNavigation
 import com.example.moviesplanet.presentation.Navigation
 import com.example.moviesplanet.presentation.generic.LiveDataEvent
-import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.lang.Exception
 import javax.inject.Inject
 
 class MovieDetailsViewModel @Inject constructor(private val moviesRepository: MoviesRepository) : ViewModel() {
@@ -34,8 +40,6 @@ class MovieDetailsViewModel @Inject constructor(private val moviesRepository: Mo
         get() = _favoriteLoadingIndicatorLiveData
 
     private var movie: Movie = Movie.getEmpty()
-
-    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     fun onTryAgainClick() {
         loadDetails()
@@ -62,40 +66,38 @@ class MovieDetailsViewModel @Inject constructor(private val moviesRepository: Mo
     }
 
     private fun removeMovieFromFavorites()  {
-        val disposable = moviesRepository.removeFromFavorite(movie)
-            .doOnSubscribe { _favoriteLoadingIndicatorLiveData.value = true }
-            .subscribe({
-                _favoriteLoadingIndicatorLiveData.value = false
-                _movieDetailsLiveData.value = _movieDetailsLiveData.value?.copy(isFavorite = false)
-            }, {
-                Timber.d(it)
-                _favoriteLoadingIndicatorLiveData.value = false
-            })
-        compositeDisposable.add(disposable)
+        _favoriteLoadingIndicatorLiveData.value = true
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                moviesRepository.removeFromFavorite(movie)
+            }
+            _favoriteLoadingIndicatorLiveData.value = false
+            _movieDetailsLiveData.value = _movieDetailsLiveData.value?.copy(isFavorite = false)
+        }
     }
 
     private fun addMovieToFavorites() {
-        val disposable = moviesRepository.addToFavorite(movie)
-            .doOnSubscribe { _favoriteLoadingIndicatorLiveData.value = true }
-            .subscribe({
-                _favoriteLoadingIndicatorLiveData.value = false
-                _movieDetailsLiveData.value = _movieDetailsLiveData.value?.copy(isFavorite = true)
-            }, {
-                Timber.d(it)
-                _favoriteLoadingIndicatorLiveData.value = false
-            })
-        compositeDisposable.add(disposable)
+        _favoriteLoadingIndicatorLiveData.value = true
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                moviesRepository.addToFavorite(movie)
+            }
+            _favoriteLoadingIndicatorLiveData.value = false
+            _movieDetailsLiveData.value = _movieDetailsLiveData.value?.copy(isFavorite = true)
+        }
     }
 
     private fun loadDetails() {
-        val disposable = moviesRepository.getMovieDetails(movie)
-            .doOnSubscribe { _loadingStatusLiveData.value = LoadingStatus.LOADING }
-            .subscribe({
-                onDetailsLoadSuccessful(it)
-            }, {
-                onDetailsLoadFailed(it)
-            })
-        compositeDisposable.add(disposable)
+        _loadingStatusLiveData.value = LoadingStatus.LOADING
+        viewModelScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                moviesRepository.getMovieDetails(movie)
+            }
+            when(result) {
+                is Result.Success -> onDetailsLoadSuccessful(result.data)
+                is Result.Error -> onDetailsLoadFailed(result.exception)
+            }.exhaustive
+        }
     }
 
     private fun onDetailsLoadSuccessful(movieDetails: MovieDetails) {
@@ -106,10 +108,5 @@ class MovieDetailsViewModel @Inject constructor(private val moviesRepository: Mo
     private fun onDetailsLoadFailed(throwable: Throwable) {
         Timber.d(throwable)
         _loadingStatusLiveData.value = LoadingStatus.loadingError(throwable.message)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        compositeDisposable.clear()
     }
 }

@@ -3,12 +3,17 @@ package com.example.moviesplanet.presentation.favorites
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.data.MoviesRepository
 import com.example.data.model.Movie
+import com.example.data.model.Result
 import com.example.moviesplanet.presentation.MovieDetailsNavigation
 import com.example.moviesplanet.presentation.Navigation
 import com.example.moviesplanet.presentation.generic.LiveDataEvent
-import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -22,8 +27,6 @@ class MyFavoritesViewModel @Inject constructor(private val moviesRepository: Mov
     val favoritesNavigationLiveData: LiveData<LiveDataEvent<Navigation>>
         get() = _favoritesNavigationLiveData
 
-    private val compositeDisposable = CompositeDisposable()
-
     init {
         loadMovies()
     }
@@ -33,17 +36,10 @@ class MyFavoritesViewModel @Inject constructor(private val moviesRepository: Mov
     }
 
     private fun loadMovies() {
-        val disposable = moviesRepository.getFavoriteMovies().subscribe({
-            _favoriteMoviesLiveData.value = it
-        }, {
-            Timber.d(it)
-            _favoriteMoviesLiveData.value = listOf()
-        })
-        compositeDisposable.add(disposable)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        compositeDisposable.clear()
+        viewModelScope.launch {
+            moviesRepository.getFavoriteMovies().collect {
+                _favoriteMoviesLiveData.value = it
+            }
+        }
     }
 }

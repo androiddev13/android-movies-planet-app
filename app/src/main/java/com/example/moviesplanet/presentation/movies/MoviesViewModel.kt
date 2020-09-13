@@ -1,9 +1,6 @@
 package com.example.moviesplanet.presentation.movies
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.example.data.MoviesRepository
@@ -15,10 +12,14 @@ import com.example.moviesplanet.presentation.MyFavoritesNavigation
 import com.example.moviesplanet.presentation.Navigation
 import com.example.moviesplanet.presentation.SettingsNavigation
 import com.example.moviesplanet.presentation.generic.LiveDataEvent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class MoviesViewModel @Inject constructor(private val moviesRepository: MoviesRepository,
-                                          private val movieDataSourceFactory: MoviesDataSourceFactory) : ViewModel() {
+class MoviesViewModel @Inject constructor(private val moviesRepository: MoviesRepository) : ViewModel() {
+
+    private val movieDataSourceFactory: MoviesDataSourceFactory = MoviesDataSourceFactory(moviesRepository, viewModelScope)
 
     private val _moviesLiveData: LiveData<PagedList<Movie>>
     val moviesLiveData: LiveData<PagedList<Movie>>
@@ -46,18 +47,30 @@ class MoviesViewModel @Inject constructor(private val moviesRepository: MoviesRe
     }
 
     fun sortByPopularClick() {
-        moviesRepository.setCurrentSortingOption(SortingOption.POPULAR)
-        movieDataSourceFactory.repositoryDataSourceLiveData.value?.invalidate()
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                moviesRepository.setCurrentSortingOption(SortingOption.POPULAR)
+            }
+            movieDataSourceFactory.repositoryDataSourceLiveData.value?.invalidate()
+        }
     }
 
     fun sortByTopRatedClick() {
-        moviesRepository.setCurrentSortingOption(SortingOption.TOP_RATED)
-        movieDataSourceFactory.repositoryDataSourceLiveData.value?.invalidate()
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                moviesRepository.setCurrentSortingOption(SortingOption.TOP_RATED)
+            }
+            movieDataSourceFactory.repositoryDataSourceLiveData.value?.invalidate()
+        }
     }
 
     fun sortByUpcomingClick() {
-        moviesRepository.setCurrentSortingOption(SortingOption.UPCOMING)
-        movieDataSourceFactory.repositoryDataSourceLiveData.value?.invalidate()
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                moviesRepository.setCurrentSortingOption(SortingOption.UPCOMING)
+            }
+            movieDataSourceFactory.repositoryDataSourceLiveData.value?.invalidate()
+        }
     }
 
     fun onMyFavoritesClick() {

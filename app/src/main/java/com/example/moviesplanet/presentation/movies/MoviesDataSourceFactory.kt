@@ -5,21 +5,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import com.example.data.MoviesRepository
 import com.example.data.model.Movie
-import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.CoroutineScope
 
 class MoviesDataSourceFactory(private val moviesRepository: MoviesRepository,
-                              private val compositeDisposable: CompositeDisposable) : DataSource.Factory<Long, Movie>() {
+                              private val coroutineScope: CoroutineScope) : DataSource.Factory<Long, Movie>() {
 
     private val _repositoryDataSourceLiveData = MutableLiveData<MoviesPageKeyedDataSource>()
     val repositoryDataSourceLiveData: LiveData<MoviesPageKeyedDataSource>
         get() = _repositoryDataSourceLiveData
 
     override fun create(): DataSource<Long, Movie> {
-        val moviesDataSource =
-            MoviesPageKeyedDataSource(
-                moviesRepository,
-                compositeDisposable
-            )
+        val moviesDataSource = MoviesPageKeyedDataSource(moviesRepository, coroutineScope)
         _repositoryDataSourceLiveData.postValue(moviesDataSource)
         return moviesDataSource
     }

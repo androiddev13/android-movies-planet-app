@@ -2,23 +2,22 @@ package com.example.data
 
 import com.example.data.model.Movie
 import com.example.data.model.MovieDetails
+import com.example.data.model.Result
 import com.example.data.model.SortingOption
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 
 interface MoviesRepository {
 
-    fun getMovies(page: Long): Single<List<Movie>>
+    suspend fun getMovies(page: Long): Result<List<Movie>>
 
-    fun getMovieDetails(movie: Movie): Single<MovieDetails>
+    suspend fun getMovieDetails(movie: Movie): Result<MovieDetails>
 
-    fun setCurrentSortingOption(sortingOption: SortingOption)
+    suspend fun setCurrentSortingOption(sortingOption: SortingOption)
 
-    fun addToFavorite(movie: Movie): Completable
+    suspend fun addToFavorite(movie: Movie)
 
-    fun removeFromFavorite(movie: Movie): Completable
+    suspend fun removeFromFavorite(movie: Movie)
 
-    fun getFavoriteMovies(): Observable<List<Movie>>
+    suspend fun getFavoriteMovies(): Flow<List<Movie>>
 
 }

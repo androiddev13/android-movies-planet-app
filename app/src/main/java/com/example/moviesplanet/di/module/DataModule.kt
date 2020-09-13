@@ -10,7 +10,6 @@ import com.example.data.storage.remote.MoviesServiceApi
 import com.example.moviesplanet.presentation.movies.MoviesDataSourceFactory
 import dagger.Module
 import dagger.Provides
-import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Singleton
 
 @Module
@@ -34,10 +33,5 @@ class DataModule {
     @Provides
     fun provideMoviesLocalDataSource(moviesPreferences: MoviesPreferences, movieDao: MovieDao): MoviesLocalDataSource {
         return MoviesLocalDataSource(moviesPreferences, movieDao)
-    }
-
-    @Provides
-    fun provideMoviesDataSourceFactory(moviesRepository: MoviesRepository): MoviesDataSourceFactory {
-        return MoviesDataSourceFactory(moviesRepository, CompositeDisposable())
     }
 }
