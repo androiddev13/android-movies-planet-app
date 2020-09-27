@@ -8,4 +8,5 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$versions.android_test_ext"
     androidTestImplementation "androidx.test.espresso:espresso-core:$versions.espresso"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$versions.espresso"
+    androidTestImplementation "androidx.arch.core:core-testing:$versions.androidx_core_testing"
 }

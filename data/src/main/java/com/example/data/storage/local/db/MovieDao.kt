@@ -22,7 +22,7 @@ interface MovieDao {
     suspend fun addMovieGenres(movieGenres: List<MovieGenreCrossRef>)
 
     @Query("DELETE from moviegenrecrossref WHERE movieId = :movieId")
-    suspend fun removeMovieGenre(movieId: Int)
+    suspend fun removeMovieGenres(movieId: Int)
 
     @Transaction
     @Query("SELECT * from movieentity")

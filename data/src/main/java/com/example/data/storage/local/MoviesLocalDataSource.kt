@@ -28,7 +28,7 @@ class MoviesLocalDataSource constructor(private val moviesPreferences: MoviesPre
 
     suspend fun removeMovieFromFavorites(movie: Movie) {
         movieDao.removeMovie(MovieEntity.from(movie))
-        movieDao.removeMovieGenre(movie.id)
+        movieDao.removeMovieGenres(movie.id)
     }
 
     fun setSortingOption(sortingOption: SortingOption) {
