@@ -1,51 +1,59 @@
 package com.example.moviesplanet.presentation.moviedetails
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.MenuItem
+import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.moviesplanet.R
-import com.example.data.model.Movie
 import com.example.data.model.Status
+import com.example.moviesplanet.R
 import com.example.moviesplanet.presentation.ExternalWebPageNavigation
 import com.example.moviesplanet.presentation.generic.LiveDataEventObserver
 import com.example.moviesplanet.presentation.generic.VerticalDividerItemDecoration
 import com.squareup.picasso.Picasso
-import dagger.android.AndroidInjection
-import kotlinx.android.synthetic.main.activity_movie_details.*
+import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.fragment_movie_details.*
+import kotlinx.android.synthetic.main.fragment_movie_details_content.*
 import kotlinx.android.synthetic.main.view_error_message.view.*
 import javax.inject.Inject
 
-class MovieDetailsActivity : AppCompatActivity() {
+class MovieDetailsFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var viewModel: MovieDetailsViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_movie_details)
+    private val args: MovieDetailsFragmentArgs by navArgs()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidSupportInjection.inject(this)
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_movie_details, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initView()
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MovieDetailsViewModel::class.java)
-        viewModel.setMovie(getMovie())
+        viewModel = ViewModelProvider(this, viewModelFactory).get(MovieDetailsViewModel::class.java)
+        viewModel.setMovie(args.movie)
 
-        viewModel.movieDetailsLiveData.observe(this, Observer {
-            Picasso.with(this)
+        viewModel.movieDetailsLiveData.observe(viewLifecycleOwner, Observer {
+            Picasso.with(requireContext())
                 .load(it.movie.posterPath)
                 .into(infoPosterImageView)
-            title = it.movie.title
             infoYearTextView.text = it.movie.releaseDate
             infoRateTextView.text = getString(R.string.rate_format, it.movie.voteAverage)
             descriptionTextView.text = it.movie.overview
@@ -62,13 +70,13 @@ class MovieDetailsActivity : AppCompatActivity() {
             containerDetail.visibility = View.VISIBLE
         })
 
-        viewModel.navigationLiveData.observe(this, LiveDataEventObserver {
+        viewModel.navigationLiveData.observe(viewLifecycleOwner, LiveDataEventObserver {
             when (it) {
                 is ExternalWebPageNavigation -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it.url)))
             }
         })
 
-        viewModel.loadingStatusLiveData.observe(this, Observer {
+        viewModel.loadingStatusLiveData.observe(viewLifecycleOwner, Observer {
             when (it.status) {
                 Status.LOADING -> {
                     progressBar.visibility = View.VISIBLE
@@ -88,7 +96,7 @@ class MovieDetailsActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.favoriteLoadingIndicatorLiveData.observe(this, Observer {
+        viewModel.favoriteLoadingIndicatorLiveData.observe(viewLifecycleOwner, Observer {
             if (it) {
                 favProgressBar.visibility = View.VISIBLE
                 favImageView.setImageResource(0)
@@ -98,21 +106,10 @@ class MovieDetailsActivity : AppCompatActivity() {
         })
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when {
-            item?.itemId == android.R.id.home -> {
-                finish()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
     private fun initView() {
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        title = ""
+        toolbar.title = args.movie.title
 
-        val manager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        val manager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         infoRecyclerView.apply {
             addItemDecoration(VerticalDividerItemDecoration(context))
             layoutManager = manager
@@ -126,16 +123,5 @@ class MovieDetailsActivity : AppCompatActivity() {
         errorMessageView.tryAgainButton.setOnClickListener { viewModel.onTryAgainClick() }
 
         favImageView.setOnClickListener { viewModel.toggleFavMovie() }
-    }
-
-    private fun getMovie() = intent.getParcelableExtra<Movie>(KEY_MOVIE)
-
-    companion object {
-
-        private val KEY_MOVIE = MovieDetailsActivity::class.java.simpleName + ".Movie"
-
-        fun getIntent(context: Context, movie: Movie): Intent {
-            return Intent(context, MovieDetailsActivity::class.java).putExtra(KEY_MOVIE, movie)
-        }
     }
 }

@@ -1,8 +1,8 @@
 package com.example.moviesplanet.di.module
 
-import com.example.moviesplanet.presentation.favorites.MyFavoritesActivity
-import com.example.moviesplanet.presentation.moviedetails.MovieDetailsActivity
-import com.example.moviesplanet.presentation.movies.MoviesActivity
+import com.example.moviesplanet.presentation.favorites.MyFavoritesFragment
+import com.example.moviesplanet.presentation.moviedetails.MovieDetailsFragment
+import com.example.moviesplanet.presentation.movies.MoviesFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -10,12 +10,12 @@ import dagger.android.ContributesAndroidInjector
 abstract class BuildersModule {
 
     @ContributesAndroidInjector
-    abstract fun contributeMoviesActivity(): MoviesActivity
+    abstract fun contributeMoviesFragment(): MoviesFragment
 
     @ContributesAndroidInjector
-    abstract fun contributeMovieDetailsActivity(): MovieDetailsActivity
+    abstract fun contributeMovieDetailsFragment(): MovieDetailsFragment
 
     @ContributesAndroidInjector
-    abstract fun contributeMyFavoritesActivity(): MyFavoritesActivity
+    abstract fun contributeMyFavoritesFragment(): MyFavoritesFragment
 
 }

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/moviesFragment">
+
+    <fragment
+        android:id="@+id/moviesFragment"
+        android:name="com.example.moviesplanet.presentation.movies.MoviesFragment"
+        android:label="main_fragment">
+
+        <action
+            android:id="@+id/action_moviesFragment_to_movieDetailsFragment"
+            app:destination="@id/movieDetailsFragment">
+            <argument
+                android:name="movie"
+                app:argType="com.example.data.model.Movie"/>
+        </action>
+
+        <action
+            android:id="@+id/action_moviesFragment_to_myFavoritesFragment"
+            app:destination="@id/myFavoritesFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/movieDetailsFragment"
+        android:name="com.example.moviesplanet.presentation.moviedetails.MovieDetailsFragment"
+        android:label="main">
+        <argument
+            android:name="movie"
+            app:argType="com.example.data.model.Movie"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/myFavoritesFragment"
+        android:name="com.example.moviesplanet.presentation.favorites.MyFavoritesFragment"
+        android:label="MyFavoritesFragment" >
+
+        <action
+            android:id="@+id/action_myFavoritesFragment_to_movieDetailsFragment"
+            app:destination="@id/movieDetailsFragment" />
+
+    </fragment>
+
+</navigation>

@@ -1,26 +1,26 @@
 package com.example.moviesplanet.presentation.favorites
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.view.MenuItem
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesplanet.R
 import com.example.moviesplanet.presentation.MovieDetailsNavigation
 import com.example.moviesplanet.presentation.generic.LiveDataEventObserver
 import com.example.moviesplanet.presentation.generic.VerticalDividerItemDecoration
-import com.example.moviesplanet.presentation.moviedetails.MovieDetailsActivity
-import dagger.android.AndroidInjection
-import kotlinx.android.synthetic.main.activity_my_favorites.*
+import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.fragment_my_favorites.*
 import javax.inject.Inject
 
-class MyFavoritesActivity : AppCompatActivity() {
+class MyFavoritesFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -28,54 +28,44 @@ class MyFavoritesActivity : AppCompatActivity() {
     private lateinit var viewModel: MyFavoritesViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
+        AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_my_favorites)
+    }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_my_favorites, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initView()
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MyFavoritesViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(MyFavoritesViewModel::class.java)
 
-        viewModel.favoriteMoviesLiveData.observe(this, Observer {
+        viewModel.favoriteMoviesLiveData.observe(viewLifecycleOwner, Observer {
             (moviesRecyclerView.adapter as MyFavoritesAdapter).setData(it)
             val noFavoritesViewVisibility = if (it.isEmpty()) View.VISIBLE else View.GONE
             noFavoritesTextView.visibility = noFavoritesViewVisibility
         })
 
-        viewModel.favoritesNavigationLiveData.observe(this, LiveDataEventObserver {
+        viewModel.favoritesNavigationLiveData.observe(viewLifecycleOwner, LiveDataEventObserver {
             when (it) {
-                is MovieDetailsNavigation -> startActivity(MovieDetailsActivity.getIntent(this, it.movie))
+                is MovieDetailsNavigation -> {
+                    val action = MyFavoritesFragmentDirections.actionMyFavoritesFragmentToMovieDetailsFragment(it.movie)
+                    findNavController().navigate(action)
+                }
             }
         })
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when {
-            item?.itemId == android.R.id.home -> {
-                finish()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
     private fun initView() {
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        title = getString(R.string.title_my_favorite_movies)
-
-        val manager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        val manager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         moviesRecyclerView.apply {
             layoutManager = manager
             addItemDecoration(VerticalDividerItemDecoration(context))
             adapter = MyFavoritesAdapter {
                 viewModel.onMovieClick(it)
             }
-        }
-    }
-
-    companion object {
-        fun getIntent(context: Context): Intent {
-            return Intent(context, MyFavoritesActivity::class.java)
         }
     }
 }

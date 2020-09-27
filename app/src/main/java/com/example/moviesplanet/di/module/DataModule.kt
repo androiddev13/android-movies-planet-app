@@ -7,7 +7,6 @@ import com.example.data.storage.local.MoviesPreferences
 import com.example.data.storage.local.db.MovieDao
 import com.example.data.storage.remote.MoviesRemoteDataSource
 import com.example.data.storage.remote.MoviesServiceApi
-import com.example.moviesplanet.presentation.movies.MoviesDataSourceFactory
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

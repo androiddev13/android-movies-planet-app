@@ -1,31 +1,27 @@
 package com.example.moviesplanet.presentation.movies
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.moviesplanet.R
 import com.example.data.model.Status
+import com.example.moviesplanet.R
 import com.example.moviesplanet.presentation.MovieDetailsNavigation
 import com.example.moviesplanet.presentation.MyFavoritesNavigation
 import com.example.moviesplanet.presentation.SettingsNavigation
-import com.example.moviesplanet.presentation.favorites.MyFavoritesActivity
 import com.example.moviesplanet.presentation.generic.LiveDataEventObserver
-import com.example.moviesplanet.presentation.moviedetails.MovieDetailsActivity
-import dagger.android.AndroidInjection
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main_content.*
+import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.fragment_movies.*
+import kotlinx.android.synthetic.main.fragment_movies_content.*
 import kotlinx.android.synthetic.main.view_error_message.view.*
 import javax.inject.Inject
 
-class MoviesActivity : AppCompatActivity() {
+class MoviesFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -35,23 +31,25 @@ class MoviesActivity : AppCompatActivity() {
     private lateinit var actionBarToggle: ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
+        AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+    }
 
-        actionBarToggle = ActionBarDrawerToggle(this, drawerLayout, 0, 0)
-        drawerLayout.addDrawerListener(actionBarToggle)
-        actionBarToggle.syncState()
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_movies, container, false)
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initView()
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MoviesViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(MoviesViewModel::class.java)
 
-        viewModel.moviesLiveData.observe(this, Observer {
+        viewModel.moviesLiveData.observe(viewLifecycleOwner, Observer {
             (mainRecyclerView.adapter as MoviesAdapter).setData(it)
         })
 
-        viewModel.moviesLoadingStatusLiveData.observe(this, Observer {
+        viewModel.moviesLoadingStatusLiveData.observe(viewLifecycleOwner, Observer {
             when(it.status) {
                 Status.FIRST_LOADING -> {
                     moviesProgressBar.visibility = View.VISIBLE
@@ -68,17 +66,46 @@ class MoviesActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.moviesNavigationLiveData.observe(this, LiveDataEventObserver {
+        viewModel.moviesNavigationLiveData.observe(viewLifecycleOwner, LiveDataEventObserver {
             when (it) {
-                is MovieDetailsNavigation -> startActivity(MovieDetailsActivity.getIntent(this, it.movie))
-                is MyFavoritesNavigation -> startActivity(MyFavoritesActivity.getIntent(this))
+                is MovieDetailsNavigation -> {
+                    val action = MoviesFragmentDirections.actionMoviesFragmentToMovieDetailsFragment(it.movie)
+                    findNavController().navigate(action)
+                }
+                is MyFavoritesNavigation -> {
+                    val action = MoviesFragmentDirections.actionMoviesFragmentToMyFavoritesFragment()
+                    findNavController().navigate(action)
+                }
                 is SettingsNavigation -> {  } // TODO
             }
         })
     }
 
     private fun initView() {
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toolbar.apply {
+            inflateMenu(R.menu.menu_movies)
+            setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.optionPopular -> {
+                        viewModel.sortByPopularClick()
+                        true
+                    }
+                    R.id.optionRate -> {
+                        viewModel.sortByTopRatedClick()
+                        true
+                    }
+                    R.id.optionUpcoming -> {
+                        viewModel.sortByUpcomingClick()
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }
+
+        actionBarToggle = ActionBarDrawerToggle(requireActivity(), drawerLayout, toolbar,0, 0)
+        drawerLayout.addDrawerListener(actionBarToggle)
+        actionBarToggle.syncState()
 
         val manager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         mainRecyclerView.layoutManager = manager
@@ -93,30 +120,6 @@ class MoviesActivity : AppCompatActivity() {
             }
             drawerLayout.closeDrawer(GravityCompat.START)
             true
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when {
-            item?.itemId == R.id.optionPopular -> {
-                viewModel.sortByPopularClick()
-                true
-            }
-            item?.itemId == R.id.optionRate -> {
-                viewModel.sortByTopRatedClick()
-                true
-            }
-            item?.itemId == R.id.optionUpcoming -> {
-                viewModel.sortByUpcomingClick()
-                true
-            }
-            actionBarToggle.onOptionsItemSelected(item) -> true
-            else -> super.onOptionsItemSelected(item)
         }
     }
 }
