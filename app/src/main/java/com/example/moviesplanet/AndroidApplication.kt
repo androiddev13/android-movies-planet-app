@@ -1,22 +1,16 @@
 package com.example.moviesplanet
 
 import android.app.Application
-import androidx.fragment.app.Fragment
-import com.example.moviesplanet.di.AppInjector
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.support.HasSupportFragmentInjector
-import javax.inject.Inject
+import dagger.hilt.android.HiltAndroidApp
+import timber.log.Timber
 
-class AndroidApplication : Application(), HasSupportFragmentInjector {
-
-    @Inject
-    lateinit var dispatchingFragmentInjector: DispatchingAndroidInjector<Fragment>
+@HiltAndroidApp
+class AndroidApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        AppInjector.init(this)
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
     }
-
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> = dispatchingFragmentInjector
 }

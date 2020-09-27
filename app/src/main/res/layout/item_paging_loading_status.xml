@@ -17,7 +17,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         />
 
-    <com.example.moviesplanet.presentation.view.ErrorMessageView
+    <com.example.moviesplanet.ui.view.ErrorMessageView
         android:id="@+id/errorMessageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

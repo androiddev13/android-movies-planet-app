@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/moviesFragment"
-        android:name="com.example.moviesplanet.presentation.movies.MoviesFragment"
+        android:name="com.example.moviesplanet.ui.movies.MoviesFragment"
         android:label="main_fragment">
 
         <action
@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/movieDetailsFragment"
-        android:name="com.example.moviesplanet.presentation.moviedetails.MovieDetailsFragment"
+        android:name="com.example.moviesplanet.ui.moviedetails.MovieDetailsFragment"
         android:label="main">
         <argument
             android:name="movie"
@@ -34,7 +34,7 @@
 
     <fragment
         android:id="@+id/myFavoritesFragment"
-        android:name="com.example.moviesplanet.presentation.favorites.MyFavoritesFragment"
+        android:name="com.example.moviesplanet.ui.favorites.MyFavoritesFragment"
         android:label="MyFavoritesFragment" >
 
         <action

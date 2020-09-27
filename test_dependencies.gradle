@@ -1,12 +1,11 @@
 dependencies {
-    testImplementation "junit:junit:$junit_version"
-    testImplementation "androidx.arch.core:core-testing:$androidx_core_testing_version"
-    testImplementation "org.mockito:mockito-core:$mockito_version"
+    testImplementation "junit:junit:$versions.junit"
+    testImplementation "androidx.arch.core:core-testing:$versions.androidx_core_testing"
+    testImplementation "org.mockito:mockito-core:$versions.mockito"
 
-    androidTestImplementation "androidx.test:runner:$android_test_version"
-    androidTestImplementation "androidx.test:rules:$android_test_version"
-    androidTestImplementation "androidx.test.ext:junit:$android_test_ext_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
-    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_version"
-    androidTestImplementation 'com.squareup.rx.idler:rx2-idler:0.11.0'
+    androidTestImplementation "androidx.test:runner:$versions.android_test"
+    androidTestImplementation "androidx.test:rules:$versions.android_test"
+    androidTestImplementation "androidx.test.ext:junit:$versions.android_test_ext"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$versions.espresso"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$versions.espresso"
 }
