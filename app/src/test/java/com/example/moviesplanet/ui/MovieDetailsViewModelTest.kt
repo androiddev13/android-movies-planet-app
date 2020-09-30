@@ -2,14 +2,12 @@ package com.example.moviesplanet.ui
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.data.MoviesRepository
-import com.example.data.model.LoadingStatus
-import com.example.data.model.Movie
-import com.example.data.model.MovieDetails
-import com.example.data.model.MovieExternalInfo
+import com.example.data.model.*
 import com.example.moviesplanet.getOrAwaitValue
+import com.example.moviesplanet.provideTestCoroutinesDispatcherProvider
 import com.example.moviesplanet.ui.moviedetails.MovieDetailsViewModel
-import io.reactivex.Completable
-import io.reactivex.Single
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -19,8 +17,8 @@ import org.junit.runners.JUnit4
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.Mockito.`when`
-import java.lang.IllegalStateException
 
+@ExperimentalCoroutinesApi
 @RunWith(JUnit4::class)
 class MovieDetailsViewModelTest {
 
@@ -38,61 +36,60 @@ class MovieDetailsViewModelTest {
     }
 
     @Test
-    fun setMovie_showsDetails() {
+    fun setMovie_showsDetails() = runBlocking {
         val expected = withMovieDetails()
-        `when`(moviesRepository.getMovieDetails(testMovie)).thenReturn(Single.just(expected))
+        `when`(moviesRepository.getMovieDetails(testMovie)).thenReturn(Result.Success(expected))
         val viewModel = withViewModel()
         viewModel.setMovie(testMovie)
-        assertEquals(viewModel.movieDetailsLiveData.getOrAwaitValue(), expected)
+        assertEquals(expected, viewModel.movieDetailsLiveData.getOrAwaitValue())
     }
 
     @Test
-    fun setMovie_loadingFailed() {
-        val expected = IllegalStateException()
-        `when`(moviesRepository.getMovieDetails(testMovie)).thenReturn(Single.error(expected))
+    fun setMovie_loadingFailed() = runBlocking {
+        `when`(moviesRepository.getMovieDetails(testMovie)).thenReturn(Result.Error(IllegalStateException()))
         val viewModel = withViewModel()
         viewModel.setMovie(testMovie)
-        assertEquals(viewModel.loadingStatusLiveData.getOrAwaitValue().message, expected.message)
+        assertEquals(Status.LOADING_FAILED, viewModel.loadingStatusLiveData.getOrAwaitValue().status)
     }
 
     @Test
-    fun tryAgainClicked_reloadsDetailsSuccess() {
-        `when`(moviesRepository.getMovieDetails(Movie.getEmpty())).thenReturn(Single.just(withMovieDetails()))
+    fun tryAgainClicked_reloadsDetailsSuccess() = runBlocking {
+        `when`(moviesRepository.getMovieDetails(Movie.getEmpty())).thenReturn(Result.Success(withMovieDetails()))
         val viewModel = withViewModel().apply { setMovie(Movie.getEmpty()) }
         viewModel.onTryAgainClick()
-        assertEquals(viewModel.loadingStatusLiveData.getOrAwaitValue(), LoadingStatus.LOADING_SUCCESS)
+        assertEquals(LoadingStatus.LOADING_SUCCESS, viewModel.loadingStatusLiveData.getOrAwaitValue())
     }
 
     @Test
-    fun externalClicked_sendsNavigationEvent() {
+    fun externalClicked_sendsNavigationEvent() = runBlocking {
         val expected = MovieExternalInfo("test_name", "test_url")
-        `when`(moviesRepository.getMovieDetails(testMovie)).thenReturn(Single.just(withMovieDetails()))
+        `when`(moviesRepository.getMovieDetails(testMovie)).thenReturn(Result.Success(withMovieDetails()))
         val viewModel = withViewModel()
         viewModel.onExternalInfoClick(expected)
         val navigation = viewModel.navigationLiveData.getOrAwaitValue().peekContent() as ExternalWebPageNavigation
-        assertEquals(navigation.url, expected.url)
+        assertEquals(expected.url, navigation.url)
     }
 
     @Test
-    fun favoriteToggled_makesUnFavorite() {
-        `when`(moviesRepository.getMovieDetails(testMovie)).thenReturn(Single.just(withMovieDetails(true)))
-        `when`(moviesRepository.removeFromFavorite(testMovie)).thenReturn(Completable.complete())
+    fun favoriteToggled_makesUnFavorite() = runBlocking {
+        `when`(moviesRepository.getMovieDetails(testMovie)).thenReturn(Result.Success(withMovieDetails(true)))
+        `when`(moviesRepository.removeFromFavorite(testMovie)).thenReturn(Unit)
         val viewModel = withViewModel().apply { setMovie(testMovie) }
         viewModel.toggleFavMovie()
         assertFalse(viewModel.movieDetailsLiveData.getOrAwaitValue().isFavorite)
     }
 
     @Test
-    fun unFavoriteToggled_makesFavorite() {
-        `when`(moviesRepository.getMovieDetails(testMovie)).thenReturn(Single.just(withMovieDetails(false)))
-        `when`(moviesRepository.addToFavorite(testMovie)).thenReturn(Completable.complete())
+    fun unFavoriteToggled_makesFavorite() = runBlocking {
+        `when`(moviesRepository.getMovieDetails(testMovie)).thenReturn(Result.Success(withMovieDetails(false)))
+        `when`(moviesRepository.addToFavorite(testMovie)).thenReturn(Unit)
         val viewModel = withViewModel().apply { setMovie(testMovie) }
         viewModel.toggleFavMovie()
         assertTrue(viewModel.movieDetailsLiveData.getOrAwaitValue().isFavorite)
     }
 
     private fun withViewModel(): MovieDetailsViewModel {
-        return MovieDetailsViewModel(moviesRepository)
+        return MovieDetailsViewModel(moviesRepository, provideTestCoroutinesDispatcherProvider())
     }
 
     private fun withMovieDetails(isFavorite: Boolean = false): MovieDetails {

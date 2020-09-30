@@ -2,6 +2,10 @@ package com.example.moviesplanet
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import com.example.data.CoroutinesDispatcherProvider
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestCoroutineDispatcher
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
@@ -38,4 +42,16 @@ fun <T> LiveData<T>.getOrAwaitValue(
 
     @Suppress("UNCHECKED_CAST")
     return data as T
+}
+
+@ExperimentalCoroutinesApi
+fun provideTestCoroutinesDispatcherProvider(main: CoroutineDispatcher? = null,
+                                            computation: CoroutineDispatcher? = null,
+                                            io: CoroutineDispatcher? = null): CoroutinesDispatcherProvider {
+    val sharedTestCoroutineDispatcher = TestCoroutineDispatcher()
+    return CoroutinesDispatcherProvider(
+        main ?: sharedTestCoroutineDispatcher,
+        computation ?: sharedTestCoroutineDispatcher,
+        io ?: sharedTestCoroutineDispatcher
+    )
 }

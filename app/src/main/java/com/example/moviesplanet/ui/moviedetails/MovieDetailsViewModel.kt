@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.data.CoroutinesDispatcherProvider
 import com.example.data.MoviesRepository
 import com.example.data.model.LoadingStatus
 import com.example.data.model.Movie
@@ -15,12 +16,12 @@ import com.example.data.utility.exhaustive
 import com.example.moviesplanet.ui.ExternalWebPageNavigation
 import com.example.moviesplanet.ui.Navigation
 import com.example.moviesplanet.ui.generic.LiveDataEvent
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-class MovieDetailsViewModel @ViewModelInject constructor(private val moviesRepository: MoviesRepository) : ViewModel() {
+class MovieDetailsViewModel @ViewModelInject constructor(private val moviesRepository: MoviesRepository,
+                                                         private val coroutinesDispatcherProvider: CoroutinesDispatcherProvider) : ViewModel() {
 
     private val _movieDetailsLiveData = MutableLiveData<MovieDetails>()
     val movieDetailsLiveData: LiveData<MovieDetails>
@@ -66,36 +67,36 @@ class MovieDetailsViewModel @ViewModelInject constructor(private val moviesRepos
 
     private fun removeMovieFromFavorites()  {
         _favoriteLoadingIndicatorLiveData.value = true
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                moviesRepository.removeFromFavorite(movie)
+        viewModelScope.launch(coroutinesDispatcherProvider.io) {
+            moviesRepository.removeFromFavorite(movie)
+            withContext(coroutinesDispatcherProvider.main) {
+                _favoriteLoadingIndicatorLiveData.value = false
+                _movieDetailsLiveData.value = _movieDetailsLiveData.value?.copy(isFavorite = false)
             }
-            _favoriteLoadingIndicatorLiveData.value = false
-            _movieDetailsLiveData.value = _movieDetailsLiveData.value?.copy(isFavorite = false)
         }
     }
 
     private fun addMovieToFavorites() {
         _favoriteLoadingIndicatorLiveData.value = true
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                moviesRepository.addToFavorite(movie)
+        viewModelScope.launch(coroutinesDispatcherProvider.io) {
+            moviesRepository.addToFavorite(movie)
+            withContext(coroutinesDispatcherProvider.main) {
+                _favoriteLoadingIndicatorLiveData.value = false
+                _movieDetailsLiveData.value = _movieDetailsLiveData.value?.copy(isFavorite = true)
             }
-            _favoriteLoadingIndicatorLiveData.value = false
-            _movieDetailsLiveData.value = _movieDetailsLiveData.value?.copy(isFavorite = true)
         }
     }
 
     private fun loadDetails() {
         _loadingStatusLiveData.value = LoadingStatus.LOADING
-        viewModelScope.launch {
-            val result = withContext(Dispatchers.IO) {
-                moviesRepository.getMovieDetails(movie)
+        viewModelScope.launch(coroutinesDispatcherProvider.io) {
+            val result = moviesRepository.getMovieDetails(movie)
+            withContext(coroutinesDispatcherProvider.main) {
+                when(result) {
+                    is Result.Success -> onDetailsLoadSuccessful(result.data)
+                    is Result.Error -> onDetailsLoadFailed(result.exception)
+                }.exhaustive
             }
-            when(result) {
-                is Result.Success -> onDetailsLoadSuccessful(result.data)
-                is Result.Error -> onDetailsLoadFailed(result.exception)
-            }.exhaustive
         }
     }
 

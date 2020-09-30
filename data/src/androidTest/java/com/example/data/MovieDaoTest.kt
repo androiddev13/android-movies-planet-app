@@ -47,8 +47,8 @@ class MovieDaoTest {
         val result = movieDao.getMoviesWithGenres().first()
 
         // Then the resulted list contains only one item which is the same as the inserted.
-        assertEquals(result.size, 1)
-        assertEquals(result.first().movie, testMovieEntity)
+        assertEquals(1, result.size)
+        assertEquals(testMovieEntity, result.first().movie)
     }
 
     @Test
@@ -63,7 +63,7 @@ class MovieDaoTest {
         val result = movieDao.getMoviesWithGenres().first()
 
         // Then the resulted list contains a movie with updated title.
-        assertEquals(result.first().movie.name, updatedName)
+        assertEquals(updatedName, result.first().movie.name)
     }
 
     @Test
@@ -90,8 +90,8 @@ class MovieDaoTest {
         val result = movieDao.getMoviesWithGenres().first()
 
         // Then the resulted list contains the movie with only one genre which was added.
-        assertEquals(result.first().genres.size, 1)
-        assertEquals(result.first().genres.first().genreId, testGenres.first().genreId)
+        assertEquals(1, result.first().genres.size)
+        assertEquals(testGenres.first().genreId, testGenres.first().genreId)
     }
 
     @Test
@@ -120,7 +120,7 @@ class MovieDaoTest {
         val result = movieDao.getMoviesWithGenres().first()
 
         // Then the resulted list contains three items.
-        assertEquals(result.size, 3)
+        assertEquals(3, result.size)
     }
 
     @After

@@ -43,7 +43,7 @@ class MoviesRemoteDataSource constructor(private val api: MoviesServiceApi,
     }
 
     private suspend fun requestMovieGenres(): Result<GenreListResponse> {
-        val result = api.getMovieGenres().safeApiResponseHandling("Error getting movie genres")
+        val result = api.getMovieGenres().safeApiResponseHandling()
         if (result is Result.Success) {
             // Cache genres in memory.
             genres = result.data.genres?: listOf()
@@ -54,15 +54,15 @@ class MoviesRemoteDataSource constructor(private val api: MoviesServiceApi,
     }
 
     private suspend fun requestMovieReviews(movieId: String): Result<ReviewListResponse> {
-        return api.getMovieReviews(movieId).safeApiResponseHandling("Error getting movie reviews")
+        return api.getMovieReviews(movieId).safeApiResponseHandling()
     }
 
     private suspend fun requestMovieVideos(movieId: String): Result<VideoListResponse> {
-        return api.getMovieVideos(movieId).safeApiResponseHandling("Error getting movie videos")
+        return api.getMovieVideos(movieId).safeApiResponseHandling()
     }
 
     private suspend fun requestMovies(sorting: String, page: Long): Result<MovieListResponse> {
-        return api.getMovies(sorting, page).safeApiResponseHandling("Error getting movies")
+        return api.getMovies(sorting, page).safeApiResponseHandling()
     }
 
     private fun SortingOption.toSort(): String {

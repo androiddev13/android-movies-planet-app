@@ -7,13 +7,16 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.data.MoviesRepository
 import com.example.data.model.Movie
 import com.example.moviesplanet.getOrAwaitValue
+import com.example.moviesplanet.provideTestCoroutinesDispatcherProvider
 import com.example.moviesplanet.ui.movies.MoviesViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
+@ExperimentalCoroutinesApi
 @RunWith(JUnit4::class)
 class MovieViewModelTest {
 
@@ -23,22 +26,19 @@ class MovieViewModelTest {
     @Mock
     lateinit var moviesRepository: MoviesRepository
 
-    @Mock
-    lateinit var moviesDataSourceFactory: MoviesDataSourceFactory
-
     private lateinit var viewModel: MoviesViewModel
 
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        viewModel = MoviesViewModel(moviesRepository, moviesDataSourceFactory)
+        viewModel = MoviesViewModel(moviesRepository, provideTestCoroutinesDispatcherProvider())
     }
 
     @Test
     fun favoritesClicked_sendsNavigationEvent() {
         viewModel.onMyFavoritesClick()
         val navigation = viewModel.moviesNavigationLiveData.getOrAwaitValue().peekContent()
-        assertEquals(navigation, MyFavoritesNavigation)
+        assertEquals(MyFavoritesNavigation, navigation)
     }
 
     @Test
@@ -46,13 +46,13 @@ class MovieViewModelTest {
         val movie = Movie.getEmpty()
         viewModel.onMovieClick(movie)
         val navigation = viewModel.moviesNavigationLiveData.getOrAwaitValue().peekContent() as MovieDetailsNavigation
-        assertSame(navigation.movie, movie)
+        assertSame(movie, navigation.movie)
     }
 
     @Test
     fun settingsClicked_sendsNavigationEvent() {
         viewModel.onSettingsClick()
         val navigation = viewModel.moviesNavigationLiveData.getOrAwaitValue().peekContent()
-        assertEquals(navigation, SettingsNavigation)
+        assertEquals(SettingsNavigation, navigation)
     }
 }

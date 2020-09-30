@@ -3,16 +3,17 @@ package com.example.moviesplanet.ui.movies
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
+import com.example.data.CoroutinesDispatcherProvider
 import com.example.data.MoviesRepository
 import com.example.data.model.Movie
 import com.example.data.model.LoadingStatus
 import com.example.data.model.Result
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MoviesPageKeyedDataSource(private val moviesRepository: MoviesRepository,
+                                private val coroutinesDispatcherProvider: CoroutinesDispatcherProvider,
                                 private val coroutineScope: CoroutineScope) : PageKeyedDataSource<Long, Movie>() {
 
     private val _loadingStatusLiveData = MutableLiveData<LoadingStatus>()
@@ -27,19 +28,19 @@ class MoviesPageKeyedDataSource(private val moviesRepository: MoviesRepository,
 
     override fun loadInitial(params: LoadInitialParams<Long>, callback: LoadInitialCallback<Long, Movie>) {
         _loadingStatusLiveData.postValue(LoadingStatus.FIRST_LOADING)
-        coroutineScope.launch {
-            val result = withContext(Dispatchers.IO) {
-                moviesRepository.getMovies(1)
-            }
-            when (result) {
-                is Result.Success -> {
-                    retry = null
-                    _loadingStatusLiveData.postValue(LoadingStatus.FIRST_LOADING_SUCCESS)
-                    callback.onResult(result.data, 1, 2)
-                }
-                is Result.Error -> {
-                    retry = { loadInitial(params, callback) }
-                    _loadingStatusLiveData.postValue(LoadingStatus.firstLoadingError(result.exception.message))
+        coroutineScope.launch(coroutinesDispatcherProvider.io) {
+            val result = moviesRepository.getMovies(1)
+            withContext(coroutinesDispatcherProvider.main) {
+                when (result) {
+                    is Result.Success -> {
+                        retry = null
+                        _loadingStatusLiveData.postValue(LoadingStatus.FIRST_LOADING_SUCCESS)
+                        callback.onResult(result.data, 1, 2)
+                    }
+                    is Result.Error -> {
+                        retry = { loadInitial(params, callback) }
+                        _loadingStatusLiveData.postValue(LoadingStatus.firstLoadingError(result.exception.message))
+                    }
                 }
             }
         }
@@ -47,20 +48,20 @@ class MoviesPageKeyedDataSource(private val moviesRepository: MoviesRepository,
 
     override fun loadAfter(params: LoadParams<Long>, callback: LoadCallback<Long, Movie>) {
         _loadingStatusLiveData.postValue(LoadingStatus.LOADING)
-        coroutineScope.launch {
-            val result = withContext(Dispatchers.IO) {
-                moviesRepository.getMovies(params.key)
-            }
-            when (result) {
-                is Result.Success -> {
-                    retry = null
-                    _loadingStatusLiveData.postValue(LoadingStatus.LOADING_SUCCESS)
-                    val nextPage = if (result.data.isNotEmpty())  params.key + 1 else null
-                    callback.onResult(result.data, nextPage)
-                }
-                is Result.Error -> {
-                    retry = { loadAfter(params, callback) }
-                    _loadingStatusLiveData.postValue(LoadingStatus.loadingError(result.exception.message))
+        coroutineScope.launch(coroutinesDispatcherProvider.io) {
+            val result = moviesRepository.getMovies(params.key)
+            withContext(coroutinesDispatcherProvider.main) {
+                when (result) {
+                    is Result.Success -> {
+                        retry = null
+                        _loadingStatusLiveData.postValue(LoadingStatus.LOADING_SUCCESS)
+                        val nextPage = if (result.data.isNotEmpty())  params.key + 1 else null
+                        callback.onResult(result.data, nextPage)
+                    }
+                    is Result.Error -> {
+                        retry = { loadAfter(params, callback) }
+                        _loadingStatusLiveData.postValue(LoadingStatus.loadingError(result.exception.message))
+                    }
                 }
             }
         }

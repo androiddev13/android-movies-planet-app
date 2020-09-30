@@ -15,12 +15,12 @@ suspend fun <T : Any> safeApiCall(call: suspend () -> Result<T>,
     }
 }
 
-fun <T : Any> Response<T>.safeApiResponseHandling(errorMessage: String): Result<T> {
+fun <T : Any> Response<T>.safeApiResponseHandling(): Result<T> {
     if (this.isSuccessful) {
         val body = this.body()
         if (body != null) {
             return Result.Success(body)
         }
     }
-    return Result.Error(IOException("$errorMessage ${this.code()} ${this.message()}"))
+    return Result.Error(IOException("${this.code()} ${this.message()}"))
 }

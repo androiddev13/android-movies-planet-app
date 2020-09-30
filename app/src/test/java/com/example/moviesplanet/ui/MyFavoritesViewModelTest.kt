@@ -4,8 +4,11 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.data.MoviesRepository
 import com.example.data.model.Movie
 import com.example.moviesplanet.getOrAwaitValue
+import com.example.moviesplanet.provideTestCoroutinesDispatcherProvider
 import com.example.moviesplanet.ui.favorites.MyFavoritesViewModel
-import io.reactivex.Observable
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -15,8 +18,8 @@ import org.junit.Assert.*
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
-import java.lang.IllegalStateException
 
+@ExperimentalCoroutinesApi
 @RunWith(JUnit4::class)
 class MyFavoritesViewModelTest {
 
@@ -37,31 +40,23 @@ class MyFavoritesViewModelTest {
     }
 
     @Test
-    fun movieClicked_sendsNavigationEvent() {
-        `when`(moviesRepository.getFavoriteMovies()).thenReturn(Observable.just(listOf()))
+    fun movieClicked_sendsNavigationEvent() = runBlocking {
+        `when`(moviesRepository.getFavoriteMovies()).thenReturn(flowOf(listOf()))
         val movie = Movie.getEmpty()
         val viewModel = withViewModel()
         viewModel.onMovieClick(movie)
         val navigation = viewModel.favoritesNavigationLiveData.getOrAwaitValue().peekContent() as MovieDetailsNavigation
-        assertSame(navigation.movie, movie)
+        assertSame(movie, navigation.movie)
     }
 
     @Test
-    fun loadMovies_favoritesExist() {
-        `when`(moviesRepository.getFavoriteMovies()).thenReturn(Observable.fromArray(testFavoriteMovies))
+    fun loadMovies_favoritesExist() = runBlocking {
+        `when`(moviesRepository.getFavoriteMovies()).thenReturn(flowOf(testFavoriteMovies))
         val viewModel = withViewModel()
-        assertEquals(viewModel.favoriteMoviesLiveData.getOrAwaitValue(), testFavoriteMovies)
-    }
-
-    @Test
-    fun loadMovies_somethingFailed() {
-        val exception = IllegalStateException()
-        `when`(moviesRepository.getFavoriteMovies()).thenReturn(Observable.error(exception))
-        val viewModel = withViewModel()
-        assertEquals(viewModel.favoriteMoviesLiveData.getOrAwaitValue(), listOf<Movie>())
+        assertEquals(testFavoriteMovies, viewModel.favoriteMoviesLiveData.getOrAwaitValue())
     }
 
     private fun withViewModel(): MyFavoritesViewModel {
-        return MyFavoritesViewModel(moviesRepository)
+        return MyFavoritesViewModel(moviesRepository, provideTestCoroutinesDispatcherProvider())
     }
 }
