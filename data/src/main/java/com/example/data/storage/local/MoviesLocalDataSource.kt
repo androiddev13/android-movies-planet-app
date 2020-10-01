@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.map
 class MoviesLocalDataSource constructor(private val moviesPreferences: MoviesPreferences,
                                         private val movieDao: MovieDao) {
 
-    suspend fun getFavoritesMovie(): Flow<List<Movie>> {
+    fun getFavoritesMovie(): Flow<List<Movie>> {
         return movieDao.getMoviesWithGenres().map { favorites ->
             favorites.map {
                 Movie(it.movie.movieId, it.movie.name, it.movie.releaseDate, it.movie.posterPath, it.movie.voteAverage, it.movie.overview, it.genres.map { genre -> genre.genreId })
